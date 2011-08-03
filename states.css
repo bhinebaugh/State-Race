@@ -1,0 +1,13 @@
+h1 { background: #88a; color: #fff; margin: 0; padding: 10px; }
+p { font-family: helvetica, sans }
+.newsection { clear: both }
+#status { font-size: 80%; }
+#status p { display: inline; padding: 20px; }
+.location { background: #def; border: 1px solid #99b; padding: 0 0.3em }
+.card { color: #730; margin:.25em}
+.cardbtn { color: #265; margin:.25em; cursor:pointer }
+.cardbtn:hover { color: #6a0; background: #fff8f0 }
+
+.player-info { width: 200px; float: left; margin: 20px; padding: 5px; border: solid 1px #888;}
+.player-info p { margin: 0; }
+.name { font-weight: bold; color: #555; border-bottom: 1px solid #ddd }
