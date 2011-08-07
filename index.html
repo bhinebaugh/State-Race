@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>Map Game</title>
+<script type="text/javascript" src="../scripts/jquery-1.3.2.js"></script>
+<script type="text/javascript" src="../scripts/raphael.js"></script>
+<script type="text/javascript" src="staterace.js"></script>
+<!-- google cdn-->
+<link rel="stylesheet" href="states.css" />
+</head>
+
+<body>
+<h1>State Race, a game of U.S. geography</h1>
+	<div id="status">
+		<p>Turn: <span id='turn_number'>turn</span> (<span id='current_player'></span>)</p>
+		<p>Cards left in deck: <span id='cards_left'>cards in deck</span></p>
+		<p>Number discarded: <span id='cards_discarded'>cards on table</span></p>
+	</div>
+<div id="players">
+	<div id="player-template" class="player-info">
+		<p class="name">Name</p>
+		<p>Mission<span class="objective"></span></p>
+		<p>Position: <span class="location"></span></p>
+		<div>Cards: <p class="cards"></p></div>
+	</div>
+</div>
+<h2 class="newsection">Game Board</h2>
+<div id="gameboard">
+<!-- <iframe id="usmap" width='960' height='800' frameborder='0' src="Color_US_Map_with_borders.svg"> -->
+<img src="map_us.png" style="margin: -5px 0 0 -15px" />
+<div id="token1" class="pawn"></div>
+<div id="token2" class="pawn"></div>
+<div id="token3" class="pawn"></div>
+</iframe></div>
+<!--Map of U.S. as SVG from Wikipedia-->
+</body>
+</html>

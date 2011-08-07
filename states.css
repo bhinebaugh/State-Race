@@ -4,10 +4,18 @@ p { font-family: helvetica, sans }
 #status { font-size: 80%; }
 #status p { display: inline; padding: 20px; }
 .location { background: #def; border: 1px solid #99b; padding: 0 0.3em }
-.card { color: #730; margin:.25em}
-.cardbtn { color: #265; margin:.25em; cursor:pointer }
-.cardbtn:hover { color: #6a0; background: #fff8f0 }
+.cardbtn { color: #730; margin:.25em}
+.human .cardbtn { color: #265; margin:.25em; cursor:pointer }
+.human .cardbtn:hover { color: #6a0; background: #fff8f0 }
+.allcardsbtn { background: #af9; border: solid 1px #7a7; cursor: pointer; 
+	color: #442; font-size: 80%; padding: 3px; }
 
-.player-info { width: 200px; float: left; margin: 20px; padding: 5px; border: solid 1px #888;}
+.player-info { width: 250px; float: left; margin: 20px; padding: 5px; border: solid 1px #888;}
 .player-info p { margin: 0; }
 .name { font-weight: bold; color: #555; border-bottom: 1px solid #ddd }
+#gameboard { position: relative; top:0 width:900px; height:612px;
+	overflow:hidden; border: 2px solid #aaaaaa }
+.pawn { width:10px; height:10px; border: 1px solid #fff; overflow:hidden: position:absolute }
+#token1 { background-color:#a82 }
+#token2 { background-color:#28a }
+#token3 { background-color:#8a2 }
