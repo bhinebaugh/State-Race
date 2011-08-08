@@ -108,6 +108,13 @@ $(document).ready( function() {
 				'position': 'absolute'
 			});
 		}
+		this.setMission = function( mission ) {
+			this.objective = mission;
+			this.playerdiv.find('.objective')[0].innerHTML = "Visit "+mission.visit;
+		}
+		this.checkVictory = function() {
+			if( this.location == this.objective.visit ) console.log("YOU HAVE WON!")
+		}
 		this.hand = new Array();
 		this.redrawHand = function() {
 			var handspan = '';
@@ -120,7 +127,7 @@ $(document).ready( function() {
 			this.hand.push(newcard);
 		}
 		this.dealHand = function( cardsNeeded ) {
-			for (var i=0; i<=cardsNeeded; i++) {
+			for (var i=0; i<cardsNeeded; i++) {
 				this.addCard(randomState());
 			}
 			this.redrawHand();
@@ -128,17 +135,29 @@ $(document).ready( function() {
 		this.switchAllCards = function() {
 			var numberOfCards = this.hand.length;
 			this.hand = [];
-			$(this.playerdiv).find('.cards').empty();
+			//$(this.playerdiv).find('.cards').empty();
 			this.dealHand(numberOfCards-1);
 			this.redrawHand();
 		}
-		this.playCard = function( target ) {
+		this.switchCards = function() {
+			var h = this.hand;
+			var lost = 0;
+			$.each(  this.playerdiv.find('.cards .unwanted') , function( ind, unw ) {
+				h.splice( h.indexOf(unw.innerHTML), 1 );
+				lost++;
+			});
+			this.dealHand(lost);
+		}
+		this.playCard = function( event ) {
+			var target = event.target.innerHTML;
 			if ( states[this.location].borders.indexOf(target) < 0 ) {
-				console.log(target + " is not a adjacent to " + this.location) 
+				console.log(target + " is not a adjacent to " + this.location);
+				$(event.target).toggleClass('unwanted');
 			} else {
 				console.log("traveling to "+target);
 				this.setLocation( target );
 				this.hand.splice( this.hand.indexOf(target), 1 );
+				this.checkVictory();
 				this.addCard( randomState() );
 				this.redrawHand();
 			}
@@ -154,14 +173,15 @@ $(document).ready( function() {
 	//draw cards
 	for (p = 0; p < players.length; p++) {
 		players[p].setLocation( randomState() );
-		players[p].dealHand(6);
+		players[p].setMission( {'visit':randomState()} );
+		players[p].dealHand(7);
 	}
 	
 	$('#You .cards').click(  function(event) {
-		players[1].playCard(event.target.innerHTML);
+		players[1].playCard( event );
 	} );
 	$('.allcardsbtn').click( function() {
-		players[1].switchAllCards();
+		players[1].switchCards();
 	});
 	
 
