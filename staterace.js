@@ -108,9 +108,29 @@ $(document).ready( function() {
 				'position': 'absolute'
 			});
 		}
-		this.setMission = function( mission ) {
-			this.objective = mission;
-			this.playerdiv.find('.objective')[0].innerHTML = "Visit "+mission.visit;
+    this.calcDistance = function( state ) {
+      var otherLoc = states[state].location;
+      var myLoc = states[this.location].location;
+      console.log("otherLoc");
+      console.log(otherLoc);
+      console.log("myLoc");
+      console.log(myLoc);
+      return Math.abs(myLoc[0]-otherLoc[0]) + Math.abs(myLoc[1]-otherLoc[1]);
+    }
+
+		this.setMission = function( distance ) {
+      var minDiff = 10000;
+      var currMin = randomState();
+      for (var x in states) {
+        diff = Math.abs(this.calcDistance(x) - distance);
+        if(diff < minDiff) {
+          minDiff = diff;
+          currMin = x;
+        }
+      }
+      this.objective = currMin;
+      this.playerdiv.find('.objective')[0].innerHTML = "Visit "+currMin;
+
 		}
 		this.checkVictory = function() {
 			if( this.location == this.objective.visit ) console.log("YOU HAVE WON!")
@@ -171,9 +191,11 @@ $(document).ready( function() {
 
 	$('#turn_number').html(turn);
 	//draw cards
+  var distance = 300;
+
 	for (p = 0; p < players.length; p++) {
 		players[p].setLocation( randomState() );
-		players[p].setMission( {'visit':randomState()} );
+		players[p].setMission( distance );
 		players[p].dealHand(7);
 	}
 	
