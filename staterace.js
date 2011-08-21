@@ -72,6 +72,28 @@ function randomState() {
 	}
 	return x
 }
+
+function ranking() {
+  //this may be a hack?
+  //create hash to store (disance -> player) as Key/Value pairs
+  //also store distances in an array
+  //sort array, then get player values in sequence
+  positions = {};
+  values = [];
+  var x = 0;
+  for (var i in players) {
+    positions[players[i].calcDistance(players[i].objective)]= players[i];
+    values[x]=players[i].calcDistance(players[i].objective);
+    x++;
+  }
+  values.sort();
+  var returnString = "";
+  for (var i in players) {
+    returnString += positions[values[i]].name + ", ";
+  }
+  return returnString.slice(0,-2);
+}
+
 $(document).ready( function() {
 	//set up the game
 	pt = $('#player-template');
@@ -111,21 +133,17 @@ $(document).ready( function() {
     this.calcDistance = function( state ) {
       var otherLoc = states[state].location;
       var myLoc = states[this.location].location;
-      console.log("otherLoc");
-      console.log(otherLoc);
-      console.log("myLoc");
-      console.log(myLoc);
-      return Math.abs(myLoc[0]-otherLoc[0]) + Math.abs(myLoc[1]-otherLoc[1]);
+     return Math.abs(myLoc[0]-otherLoc[0]) + Math.abs(myLoc[1]-otherLoc[1]);
     }
 
 		this.setMission = function( distance ) {
       var minDiff = 10000;
       var currMin = randomState();
-      for (var x in states) {
-        diff = Math.abs(this.calcDistance(x) - distance);
+      for (var state in states) {
+        diff = Math.abs(this.calcDistance(state) - distance);
         if(diff < minDiff) {
           minDiff = diff;
-          currMin = x;
+          currMin = state;
         }
       }
       this.objective = currMin;
@@ -180,6 +198,7 @@ $(document).ready( function() {
 				this.checkVictory();
 				this.addCard( randomState() );
 				this.redrawHand();
+        $('#ranking').html(ranking());
 			}
 		}
 	}
