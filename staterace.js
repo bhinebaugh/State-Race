@@ -151,15 +151,34 @@ $(document).ready( function() {
 
 		}
 		this.checkVictory = function() {
-			if( this.location == this.objective.visit ) console.log("YOU HAVE WON!")
+			if( this.location == this.objective ) {
+				console.log("YOU HAVE WON!");
+				$('#ranking').html(this.name+" has won the game!");
+			}
 		}
 		this.hand = new Array();
 		this.redrawHand = function() {
 			var handspan = '';
+			var meObj = this;
+			var myDiv = "#"+this.name;
 			for( var i =0; i<this.hand.length; i++ ) {
 				handspan += "<span class='cardbtn'>"+this.hand[i]+"</span>";
 			}
 			$(this.playerdiv).find('.cards').html(handspan);
+			$(myDiv + ' .cardbtn').draggable({ containment: myDiv, revert: "invalid" });
+			$(myDiv + ' .discards').droppable({
+				drop : function( event, ui ) {
+					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
+					// register the card as on to discard later / at end of turn
+				}
+			});
+			$(myDiv + ' .destination').droppable({
+				activeClass : "destination-drop",
+				drop : function( event, ui ) {
+					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
+					meObj.playCard(ui.draggable.prop('innerHTML'));
+				}
+			});
 		}
 		this.addCard = function( newcard ) {
 			this.hand.push(newcard);
@@ -174,7 +193,7 @@ $(document).ready( function() {
 			var numberOfCards = this.hand.length;
 			this.hand = [];
 			//$(this.playerdiv).find('.cards').empty();
-			this.dealHand(numberOfCards-1);
+			this.dealHand(numberOfCards);
 			this.redrawHand();
 		}
 		this.switchCards = function() {
@@ -186,16 +205,17 @@ $(document).ready( function() {
 			});
 			this.dealHand(lost);
 		}
-		this.playCard = function( event ) {
-			var target = event.target.innerHTML;
+		this.playCard = function( target ) {
+			//var target = event.target.innerHTML;
 			if ( states[this.location].borders.indexOf(target) < 0 ) {
 				console.log(target + " is not a adjacent to " + this.location);
-				$(event.target).toggleClass('unwanted');
+				// revert card to original postion
 			} else {
 				console.log("traveling to "+target);
 				this.setLocation( target );
 				this.hand.splice( this.hand.indexOf(target), 1 );
 				this.checkVictory();
+				// animate cards consolide left, new card slides in from right
 				this.addCard( randomState() );
 				this.redrawHand();
         $('#ranking').html(ranking());
@@ -218,11 +238,11 @@ $(document).ready( function() {
 		players[p].dealHand(7);
 	}
 	
-	$('#You .cards').click(  function(event) {
-		players[1].playCard( event );
-	} );
+	//~ $('#You .cards').click(  function(event) {
+		//~ players[1].playCard( event );
+	//~ } );
 	$('.allcardsbtn').click( function() {
-		players[1].switchCards();
+		players[1].switchAllCards();
 	});
 	
 

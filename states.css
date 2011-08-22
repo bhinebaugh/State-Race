@@ -4,12 +4,30 @@ p { font-family: helvetica, sans }
 #status { font-size: 80%; }
 #status p { display: inline; padding: 20px; }
 .location { background: #def; border: 1px solid #99b; padding: 0 0.3em }
-.cardbtn { color: #730; margin:.25em}
-.human .cardbtn { color: #265; margin:.25em; cursor:pointer }
-.human .cardbtn:hover { color: #6a0; background: #fff8f0 }
-.human .unwanted { background: #c98; color:#333 }
+.cards { height: 2em; }
+.cardbtn { color: #730; margin:.25em; font: 1em sans-serif }
+.human .cardbtn { cursor: pointer; }
+.human div.cardsinhand {
+	border: 1px dashed #ccc;
+}
+.destination { visibility: hidden; }
+.destination-drop {
+	visibility: visible;
+	background: #ccc;
+	padding: 2px;
+	border: 1px double #fff;
+}
+div.discards {
+	background: #fdd;
+	border: 1px solid #caa;
+	color: #744;
+	margin: auto;
+	padding: 10px;
+	font: 0.8em Arial, sans-serif;
+}
+
 .allcardsbtn { background: #af9; border: solid 1px #7a7; cursor: pointer; 
-	color: #442; font-size: 80%; padding: 3px; }
+	color: #442; font-size: 80%; margin: 5px; padding: 3px;}
 
 .player-info { width: 250px; float: left; margin: 20px; padding: 5px; border: solid 1px #888;}
 .player-info p { margin: 0; }
