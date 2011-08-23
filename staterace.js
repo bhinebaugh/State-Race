@@ -161,24 +161,40 @@ $(document).ready( function() {
 			var handspan = '';
 			var meObj = this;
 			var myDiv = "#"+this.name;
+			var bordering = states[ this.location ].borders;
+			var startspan = "";
 			for( var i =0; i<this.hand.length; i++ ) {
-				handspan += "<span class='cardbtn'>"+this.hand[i]+"</span>";
+				if( bordering.indexOf(this.hand[i]) == -1 )  {
+					startspan = "<span class='cardbtn'>";
+				} else {
+					startspan = "<span class='cardbtn adjacent'>";
+				}
+				handspan += startspan+this.hand[i]+"</span>";
 			}
 			$(this.playerdiv).find('.cards').html(handspan);
 			$(myDiv + ' .cardbtn').draggable({ containment: myDiv, revert: "invalid" });
-			$(myDiv + ' .discards').droppable({
-				drop : function( event, ui ) {
-					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
-					// register the card as on to discard later / at end of turn
-				}
-			});
 			$(myDiv + ' .destination').droppable({
 				activeClass : "destination-drop",
+				hoverClass : "destination-over",
+				accept : ".adjacent",
 				drop : function( event, ui ) {
 					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
 					meObj.playCard(ui.draggable.prop('innerHTML'));
 				}
 			});
+			$(myDiv + ' .discards').droppable({
+				drop : function( event, ui ) {
+					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
+					console.log("time to switchCards");
+					// register the card as on to discard later / at end of turn
+					ui.draggable.addClass('unwanted');
+					// change text and binding of  discard button
+					$(myDiv + ' .allcardsbtn').html("Discard the cards above");
+					//$('.allcardsbtn').bind('click', jQuery.proxy(meObj, "switchCards") );
+					$(myDiv + ' .allcardsbtn').unbind().bind('click', $.proxy(meObj.switchCards, meObj) );
+				}
+			});
+			$(myDiv + ' .allcardsbtn').unbind().bind('click', $.proxy(meObj.switchAllCards, meObj ) );
 		}
 		this.addCard = function( newcard ) {
 			this.hand.push(newcard);
@@ -190,6 +206,7 @@ $(document).ready( function() {
 			this.redrawHand();
 		}
 		this.switchAllCards = function() {
+			console.log("switch cards from "+$(this).prop('class')+" which is not meObj?");
 			var numberOfCards = this.hand.length;
 			this.hand = [];
 			//$(this.playerdiv).find('.cards').empty();
@@ -199,6 +216,7 @@ $(document).ready( function() {
 		this.switchCards = function() {
 			var h = this.hand;
 			var lost = 0;
+			console.log("switching cards out");
 			$.each(  this.playerdiv.find('.cards .unwanted') , function( ind, unw ) {
 				h.splice( h.indexOf(unw.innerHTML), 1 );
 				lost++;
@@ -214,11 +232,11 @@ $(document).ready( function() {
 				console.log("traveling to "+target);
 				this.setLocation( target );
 				this.hand.splice( this.hand.indexOf(target), 1 );
+				$('#ranking').html(ranking());
 				this.checkVictory();
 				// animate cards consolide left, new card slides in from right
 				this.addCard( randomState() );
 				this.redrawHand();
-        $('#ranking').html(ranking());
 			}
 		}
 	}
@@ -241,9 +259,9 @@ $(document).ready( function() {
 	//~ $('#You .cards').click(  function(event) {
 		//~ players[1].playCard( event );
 	//~ } );
-	$('.allcardsbtn').click( function() {
-		players[1].switchAllCards();
-	});
+	//~ $('.allcardsbtn').click( function() {
+		//~ players[1].switchAllCards();
+	//~ });
 	
 
 	//move, move, move

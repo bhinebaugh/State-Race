@@ -6,16 +6,26 @@ p { font-family: helvetica, sans }
 .location { background: #def; border: 1px solid #99b; padding: 0 0.3em }
 .cards { height: 2em; }
 .cardbtn { color: #730; margin:.25em; font: 1em sans-serif }
+.adjacent { border-bottom: 2px solid #db6; }
 .human .cardbtn { cursor: pointer; }
 .human div.cardsinhand {
 	border: 1px dashed #ccc;
 }
-.destination { visibility: hidden; }
+.destination { 
+	visibility: hidden;
+	font-size: 75%;
+	color: #888;
+	overflow: hidden;
+}
 .destination-drop {
 	visibility: visible;
-	background: #ccc;
+	background: #e0e0e0;
 	padding: 2px;
-	border: 1px double #fff;
+	border: 1px solid #aaa;
+}
+.destination-over {
+	background: #d0dfd0;
+	border: 2px solid #8d5;
 }
 div.discards {
 	background: #fdd;
