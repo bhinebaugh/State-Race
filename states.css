@@ -5,8 +5,15 @@ p { font-family: helvetica, sans }
 #status p { display: inline; padding: 20px; }
 .location { background: #def; border: 1px solid #99b; padding: 0 0.3em }
 .cards { height: 2em; }
-.cardbtn { color: #730; margin:.25em; font: 1em sans-serif }
-.adjacent { border-bottom: 2px solid #db6; }
+.cardbtn { 
+	background: #efeff8;
+	color: #730; 
+	margin:3px;
+	padding:3px; 
+	font: 1em sans-serif; 
+	z-index: 300; 
+}
+.adjacent { border-bottom: 3px solid #eb6; }
 .human .cardbtn { cursor: pointer; }
 .human div.cardsinhand {
 	border: 1px dashed #ccc;
@@ -30,17 +37,28 @@ p { font-family: helvetica, sans }
 div.discards {
 	background: #fdd;
 	border: 1px solid #caa;
-	color: #744;
 	margin: auto;
 	padding: 10px;
+	text-align: center;
+}
+div.discards p {
 	font: 0.8em Arial, sans-serif;
+	color: #daa;
+}
+.discards .control {
+	border-top: 1px solid #fa6;
+	font-size: 80%; margin: 5px; padding: 3px;
+	text-align: right;
+}
+.discards .allcardsbtn { 
+	background: #fa9; border: solid 1px #7a7; cursor: pointer; 
+	padding: 3px;
+	color: #442;  text-align: center;
 }
 
-.allcardsbtn { background: #af9; border: solid 1px #7a7; cursor: pointer; 
-	color: #442; font-size: 80%; margin: 5px; padding: 3px;}
-
 .player-info { width: 250px; float: left; margin: 20px; padding: 5px; border: solid 1px #888;}
-.player-info p { margin: 0; }
+.player-info p { margin: 0; color: #777; font-size:14px; }
+span.objective, span.location { color: #000 }
 .name { font-weight: bold; color: #555; border-bottom: 1px solid #ddd }
 #gameboard { position: relative; top:0 width:900px; height:612px;
 	overflow:hidden; border: 2px solid #aaaaaa }

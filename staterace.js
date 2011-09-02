@@ -205,7 +205,8 @@ function ranking() {
 $(document).ready( function() {
 	//set up the game
 	pt = $('#player-template');
-	newCardsButton = "<p class='allcardsbtn'>Draw New Cards</p>";
+	newCardsButton = "<p class='control'><span class='or'>or </span><span class='allcardsbtn'>Draw New Cards</span></p>";
+	cardTmpl = "<span class='cardbtn'></span>";
 	turn = 0;
 	players = [];
 	
@@ -217,12 +218,11 @@ $(document).ready( function() {
 		this.name = name;
 		this.nameDiv = this.playerdiv.find('.name')[0];
 		$(this.nameDiv).html(name);
-		$(this.playerDiv).append(newCardsButton);
+		//$(this.playerDiv).append(newCardsButton);
 		//p_temp.find('.name').each( function() { this.update('shmoo') });
-		//$('#'+name+' .name').html(this.name);
 		this.automated = nonhuman;
 		if( !this.automated ) {
-			this.playerdiv.append(newCardsButton)
+			this.playerdiv.find('.discards').append(newCardsButton);
 			$(this.playerdiv).addClass('human');
 		}
 		this.icon = $(pawnid);
@@ -255,7 +255,7 @@ $(document).ready( function() {
         }
       }
       this.objective = currMin;
-      this.playerdiv.find('.objective')[0].innerHTML = "Visit "+currMin;
+      this.playerdiv.find('.objective')[0].innerHTML = "Visit "+stateObjects[currMin].name + " ("+currMin+")";
 
 		}
 		this.checkVictory = function() {
@@ -265,7 +265,36 @@ $(document).ready( function() {
 			}
 		}
 		this.hand = new Array();
-		this.redrawHand = function() {
+		this.cards = new Array();
+		this.setDroppables = function() {
+			var myDiv = this.playerdiv;
+			var meObj = this;
+			myDiv.find('.destination').droppable({
+				activeClass : "destination-drop",
+				hoverClass : "destination-over",
+				accept : ".adjacent",
+				drop : function( event, ui ) {
+					meObj.playCard(ui.draggable.prop('innerHTML'));
+					$(ui.draggable).remove();
+				}
+			});
+			myDiv.find('.discards').droppable({
+				drop : function( event, ui ) {
+					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
+					// register the card on to discard later / at end of turn
+					ui.draggable.addClass('unwanted');
+					// change text and binding of  discard button
+					//$('.allcardsbtn').bind('click', jQuery.proxy(meObj, "switchCards") );
+					myDiv.find('.discards .or').hide();
+					myDiv.find('.allcardsbtn').html("Discard the cards above");
+					// the line below won't bind 'this' to switchCards the way switchAllCards does later, b/c inside jquery scope?
+					myDiv.find('.allcardsbtn').unbind().bind('click', $.proxy(meObj.switchCards, meObj) );
+				}
+			});
+			myDiv.find('.discards .or').show();
+			myDiv.find('.allcardsbtn').html("Exchange all cards").unbind().bind('click', $.proxy(this.switchAllCards, this ) );
+		};
+		this.redrawHand = function() { // deprecate this function
 			var handspan = '';
 			var meObj = this;
 			var myDiv = "#"+this.name;
@@ -281,70 +310,78 @@ $(document).ready( function() {
 			}
 			$(this.playerdiv).find('.cards').html(handspan);
 			$(myDiv + ' .cardbtn').draggable({ containment: myDiv, revert: "invalid" });
-			$(myDiv + ' .destination').droppable({
-				activeClass : "destination-drop",
-				hoverClass : "destination-over",
-				accept : ".adjacent",
-				drop : function( event, ui ) {
-					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
-					meObj.playCard(ui.draggable.prop('innerHTML'));
-				}
-			});
-			$(myDiv + ' .discards').droppable({
-				drop : function( event, ui ) {
-					console.log(ui.draggable.prop('innerHTML') + " was dropped on "+$(this).attr('class'));
-					console.log("time to switchCards");
-					// register the card as on to discard later / at end of turn
-					ui.draggable.addClass('unwanted');
-					// change text and binding of  discard button
-					$(myDiv + ' .allcardsbtn').html("Discard the cards above");
-					//$('.allcardsbtn').bind('click', jQuery.proxy(meObj, "switchCards") );
-					$(myDiv + ' .allcardsbtn').unbind().bind('click', $.proxy(meObj.switchCards, meObj) );
-				}
-			});
-			$(myDiv + ' .allcardsbtn').unbind().bind('click', $.proxy(meObj.switchAllCards, meObj ) );
 		}
-		this.addCard = function( newcard ) {
-			this.hand.push(newcard);
+		this.markAdjacentCards = function( cardArray ) {
+			if( cardArray instanceof Array) {
+				$.each( cardArray, $.proxy( 
+					function( index, cardObj ) {
+						if(stateObjects[cardObj.html()].movesTo(stateObjects[this.location]) == 1) cardObj.addClass('adjacent');
+					}, this )
+				)
+			}
+		}
+		this.addCard = function( stateAbbrev ) {
+			var cardDiv = $( cardTmpl );
+			cardDiv.html( stateAbbrev );
+			this.markAdjacentCards( [cardDiv] );
+			cardDiv.draggable({ containment: "#"+this.name, revert: "invalid" });
+			this.cards.push( cardDiv );
+			this.hand.push(stateAbbrev);
+			$(this.playerdiv).find('.cards').append(cardDiv);
 		}
 		this.dealHand = function( cardsNeeded ) {
 			for (var i=0; i<cardsNeeded; i++) {
 				this.addCard(randomState());
 			}
-			this.redrawHand();
+			//this.redrawHand();
+			this.setDroppables();
 		}
 		this.switchAllCards = function() {
-			console.log("switch cards from "+$(this).prop('class')+" which is not meObj?");
-			var numberOfCards = this.hand.length;
-			this.hand = [];
-			//$(this.playerdiv).find('.cards').empty();
+			console.log("switchAllCards");
+			var numberOfCards = this.cards.length;
+			this.cards = [];
+			$(this.playerdiv).find('.cards').empty();
 			this.dealHand(numberOfCards);
-			this.redrawHand();
+			//this.redrawHand();
 		}
 		this.switchCards = function() {
-			var h = this.hand;
-			var lost = 0;
-			console.log("switching cards out");
-			$.each(  this.playerdiv.find('.cards .unwanted') , function( ind, unw ) {
-				h.splice( h.indexOf(unw.innerHTML), 1 );
-				lost++;
+			console.log("switchCards ... cards length "+this.cards.length);
+			var h = this.cards;
+			var cardsLost = 0;
+			var cardsKept = new Array();
+			$.each( h, function( index, card ) {
+				var discardtest = "considering "+card.html();
+				if( card.hasClass('unwanted') ) {
+					discardtest += " ... unwanted";
+					card.remove();
+					cardsLost++;
+					//h.splice( index, 1 );
+				} else { 
+					discardtest += " ... retain";
+					cardsKept.push(card);
+				}
+				console.log(discardtest);
 			});
-			this.dealHand(lost);
+			this.cards = cardsKept;
+			// animate cards leftward into any empty spaces created by discards
+			this.dealHand(cardsLost);
 		}
 		this.playCard = function( target ) {
 			//var target = event.target.innerHTML;
-			if ( states[this.location].borders.indexOf(target) < 0 ) {
-				console.log(target + " is not a adjacent to " + this.location);
-				// revert card to original postion
-			} else {
+			if ( stateObjects[target].movesTo(stateObjects[this.location]) === 1 ) {
 				console.log("traveling to "+target);
 				this.setLocation( target );
 				this.hand.splice( this.hand.indexOf(target), 1 );
+				// mark cards whose states are adjacent to the new location
+				this.markAdjacentCards( this.cards );
 				$('#ranking').html(ranking());
 				this.checkVictory();
 				// animate cards consolide left, new card slides in from right
 				this.addCard( randomState() );
-				this.redrawHand();
+				//this.redrawHand();
+			} else {
+				console.log(target + " is not a adjacent to " + this.location);
+				// revert card to original postion through 'revert' property on .draggable()
 			}
 		}
 	}
@@ -362,6 +399,7 @@ $(document).ready( function() {
 		players[p].setLocation( randomState() );
 		players[p].setMission( distance );
 		players[p].dealHand(7);
+		players[p].setDroppables();
 	}
 	
 	//~ $('#You .cards').click(  function(event) {
