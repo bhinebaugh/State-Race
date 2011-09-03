@@ -1,6 +1,26 @@
 h1 { background: #88a; color: #fff; margin: 0; padding: 10px; }
 p { font-family: helvetica, sans }
 .newsection { clear: both }
+
+#instructions { 
+	border: 2px solid #F6B;
+	background: #BCD;
+	position: absolute;
+	top: 200px;
+	left: 200px;
+	height: 150px;
+	width: 300px;	
+	display: none;
+}
+
+#help {
+	height:4em;
+	width: 12em;
+	position: absolute;
+	right: 20px;
+	top: 10px;
+}
+
 #status { font-size: 80%; }
 #status p { display: inline; padding: 20px; }
 .location { background: #def; border: 1px solid #99b; padding: 0 0.3em }

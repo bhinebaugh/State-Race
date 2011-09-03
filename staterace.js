@@ -203,6 +203,23 @@ function ranking() {
 }
 
 $(document).ready( function() {
+	$("#instructions #done").bind("click", function(){
+		$("#help").show();
+		animate();
+	});
+	$("#help").bind("click", function(){
+		$(this).hide();
+		animate();
+	});
+	
+	var animate = function() {
+		$("#instructions").animate({
+			opacity: 0.9,
+			height: 'toggle'
+			}, 500, function() {
+			// Animation complete.
+		});
+	};
 	//set up the game
 	pt = $('#player-template');
 	newCardsButton = "<p class='control'><span class='or'>or </span><span class='allcardsbtn'>Draw New Cards</span></p>";
