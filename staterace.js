@@ -274,8 +274,7 @@ $(document).ready( function() {
 				hoverClass : "destination-over",
 				accept : ".adjacent",
 				drop : function( event, ui ) {
-					meObj.playCard(ui.draggable.prop('innerHTML'));
-					$(ui.draggable).remove();
+					meObj.playCard(ui.draggable);
 				}
 			});
 			myDiv.find('.discards').droppable({
@@ -314,8 +313,13 @@ $(document).ready( function() {
 		this.markAdjacentCards = function( cardArray ) {
 			if( cardArray instanceof Array) {
 				$.each( cardArray, $.proxy( 
-					function( index, cardObj ) {
-						if(stateObjects[cardObj.html()].movesTo(stateObjects[this.location]) == 1) cardObj.addClass('adjacent');
+					function( index, cardDOM ) {
+						var cardObj = $(cardDOM);
+						if(stateObjects[cardObj.html()].movesTo(stateObjects[this.location]) == 1) {
+							cardObj.addClass('adjacent');
+						} else {
+							cardObj.removeClass('adjacent');
+						}
 					}, this )
 				)
 			}
@@ -323,10 +327,9 @@ $(document).ready( function() {
 		this.addCard = function( stateAbbrev ) {
 			var cardDiv = $( cardTmpl );
 			cardDiv.html( stateAbbrev );
-			this.markAdjacentCards( [cardDiv] );
+			this.markAdjacentCards( [cardDiv] ); // pass in as a single-element array
 			cardDiv.draggable({ containment: "#"+this.name, revert: "invalid" });
-			this.cards.push( cardDiv );
-			this.hand.push(stateAbbrev);
+			this.cards.push( cardDiv[0] );
 			$(this.playerdiv).find('.cards').append(cardDiv);
 		}
 		this.dealHand = function( cardsNeeded ) {
@@ -337,7 +340,6 @@ $(document).ready( function() {
 			this.setDroppables();
 		}
 		this.switchAllCards = function() {
-			console.log("switchAllCards");
 			var numberOfCards = this.cards.length;
 			this.cards = [];
 			$(this.playerdiv).find('.cards').empty();
@@ -349,7 +351,8 @@ $(document).ready( function() {
 			var h = this.cards;
 			var cardsLost = 0;
 			var cardsKept = new Array();
-			$.each( h, function( index, card ) {
+			$.each( h, function( index, cardDOM ) {
+				var card = $(cardDOM);
 				var discardtest = "considering "+card.html();
 				if( card.hasClass('unwanted') ) {
 					discardtest += " ... unwanted";
@@ -366,12 +369,17 @@ $(document).ready( function() {
 			// animate cards leftward into any empty spaces created by discards
 			this.dealHand(cardsLost);
 		}
-		this.playCard = function( target ) {
-			//var target = event.target.innerHTML;
+		this.playCard = function( targetDOMList ) {
+			var targetDOM = targetDOMList[0];
+			var target = targetDOM.innerHTML;
+			console.log(targetDOM);
+			console.log(targetDOM.innerHTML);
+			//var cardPlayed = this.cards[ the one that matches target ]
 			if ( stateObjects[target].movesTo(stateObjects[this.location]) === 1 ) {
 				console.log("traveling to "+target);
+				this.cards.splice( this.cards.indexOf(targetDOM), 1 );
 				this.setLocation( target );
-				this.hand.splice( this.hand.indexOf(target), 1 );
+				$(targetDOM).remove();
 				// mark cards whose states are adjacent to the new location
 				this.markAdjacentCards( this.cards );
 				$('#ranking').html(ranking());
@@ -380,7 +388,7 @@ $(document).ready( function() {
 				this.addCard( randomState() );
 				//this.redrawHand();
 			} else {
-				console.log(target + " is not a adjacent to " + this.location);
+				console.log(target + " is not adjacent to " + this.location);
 				// revert card to original postion through 'revert' property on .draggable()
 			}
 		}
