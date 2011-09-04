@@ -202,7 +202,17 @@ function ranking() {
   return returnString.slice(0,-2);
 }
 
+function embedSvg(){
+$("#gameboard").svg({     
+	loadURL: "Color_US_Map_with_borders.svg",     
+	onLoad: null,    
+	settings: {},      
+	initPath: ''});
+}
+
+
 $(document).ready( function() {
+	embedSvg();
 	$("#instructions #done").bind("click", function(){
 		$("#help").show();
 		animate();
