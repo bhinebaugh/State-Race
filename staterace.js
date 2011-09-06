@@ -267,12 +267,17 @@ $(document).ready( function() {
 		this.hand = new Array();
 		this.cards = new Array();
 		this.setDroppables = function() {
+			console.log("set droppables for "+this.name);
 			var myDiv = this.playerdiv;
 			var meObj = this;
+			myDiv.find('.cards').droppable({
+				//if cards are dragged back, remove the unwanted class
+				drop: function( event, ui ){ ui.draggable.removeClass('unwanted') }
+			});
 			myDiv.find('.destination').droppable({
 				activeClass : "destination-drop",
 				hoverClass : "destination-over",
-				accept : ".adjacent",
+				accept :  ".adjacent",
 				drop : function( event, ui ) {
 					meObj.playCard(ui.draggable);
 				}
@@ -328,7 +333,9 @@ $(document).ready( function() {
 			var cardDiv = $( cardTmpl );
 			cardDiv.html( stateAbbrev );
 			this.markAdjacentCards( [cardDiv] ); // pass in as a single-element array
-			cardDiv.draggable({ containment: "#"+this.name, revert: "invalid" });
+			if(!this.automated) {
+				cardDiv.draggable({ containment: "#"+this.name, revert: "invalid" });
+			}
 			this.cards.push( cardDiv[0] );
 			$(this.playerdiv).find('.cards').append(cardDiv);
 		}
@@ -337,7 +344,7 @@ $(document).ready( function() {
 				this.addCard(randomState());
 			}
 			//this.redrawHand();
-			this.setDroppables();
+			if(!this.automated) this.setDroppables();
 		}
 		this.switchAllCards = function() {
 			var numberOfCards = this.cards.length;
@@ -400,35 +407,17 @@ $(document).ready( function() {
 	pt.hide();
 
 	$('#turn_number').html(turn);
-	//draw cards
   var distance = 300;
 
 	for (p = 0; p < players.length; p++) {
 		players[p].setLocation( randomState() );
 		players[p].setMission( distance );
 		players[p].dealHand(7);
-		players[p].setDroppables();
+		if(!players[p].automated) {
+			players[p].setDroppables();
+		}
 	}
 	
-	//~ $('#You .cards').click(  function(event) {
-		//~ players[1].playCard( event );
-	//~ } );
-	//~ $('.allcardsbtn').click( function() {
-		//~ players[1].switchAllCards();
-	//~ });
-	
-
 	//move, move, move
-	
-	/***
-	get targetState
-	is player.location adjacent to targetState?  
-	if (states[player.location].borders includes targetState)
-	player.location = targetState
-	***/
-
-	//check victory conditions
-
-
 	//end the game, restart if requested
 });
