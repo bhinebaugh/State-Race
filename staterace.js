@@ -123,6 +123,7 @@ function Player(name, nonhuman, pawnid) {
 	}
 	
 	this.endTurn = function() {
+		this.playerdiv.removeClass('end').removeClass('start');
 		clearTimeout(this.pulsing);
 		// Various other cleanup tasks;
 	}
