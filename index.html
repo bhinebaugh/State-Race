@@ -4,20 +4,38 @@
 <script type="text/javascript" src="scripts/jquery.min.js"></script>
 <script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
 <!--script type="text/javascript" src="scripts/raphael.js"></script-->
+<style type="text/css">@import "scripts/jquery.svg.css";</style> 
+<script type="text/javascript" src="scripts/jquery.svg.js"></script>
+<script type="text/javascript" src="scripts/jquery.svgdom.js"></script>
 <script type="text/javascript" src="scripts/underscore.js"></script>
 <script type="text/javascript" src="staterace.js"></script>
+
 <!-- google cdn-->
 <link rel="stylesheet" href="states.css" />
 </head>
 
 <body>
+	
 <h1>State Race, a game of U.S. geography</h1>
+
+	<div id="instructions">
+		<p>
+		Lorem Ipsum this is how to play.
+		</p>
+		<button id="done">OK!</button>	
+	</div>	
+
+	<button id="help">
+		Instructions for Gameplay!
+	</button>
+	
 	<div id="status">
     <p>Turn: <span id='turn_number'>turn</span> (<span id='current_player'></span>)</p>
     <p>Ranking: <span id='ranking'>rank</span></p>
 		<p>Cards left in deck: <span id='cards_left'>cards in deck</span></p>
 		<p>Number discarded: <span id='cards_discarded'>cards on table</span></p>
 	</div>
+<<<<<<< HEAD
 <div id="players">
 	<div id="player-template" class="player-info">
 		<p class="name">(player name)</p>
@@ -34,10 +52,15 @@
 <h2 class="newsection">Game Board</h2>
 <div id="gameboard">
 <!-- <iframe id="usmap" width='960' height='800' frameborder='0' src="Color_US_Map_with_borders.svg"> -->
-<img src="map_us.png" style="margin: -5px 0 0 -15px" />
+<!-- <embed id="mapvector" src="Color_US_Map_with_borders.svg" width="960" height="800"
+type="image/svg+xml"
+pluginspage="http://www.adobe.com/svg/viewer/install/" />  -- embed via jQuery instead  -->
+
 <div id="token1" class="pawn"></div>
 <div id="token2" class="pawn"></div>
 <div id="token3" class="pawn"></div>
+
+
 </iframe></div>
 <!--Map of U.S. as SVG from Wikipedia-->
 </body>
