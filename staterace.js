@@ -11,11 +11,11 @@ Questions:
 ********/
 
 //set up the game
-newCardsButton = "<p class='control'><span class='or'>or </span><span class='allcardsbtn'>Draw New Cards</span></p>";
-cardTmpl = "<span class='cardbtn'></span>";
-round = 1;   // How many rounds of the game have been played
-turn = -1;    // Index indicating which player's turn it is
-players = [];
+var newCardsButton = "<p class='control'><span class='or'>or </span><span class='allcardsbtn'>Draw New Cards</span></p>";
+var cardTmpl = "<span class='cardbtn'></span>";
+var round = 1;   // How many rounds of the game have been played
+var turn = -1;    // Index indicating which player's turn it is
+var players = [];
 
 
 
@@ -103,7 +103,7 @@ function Player(name, nonhuman, pawnid) {
 	
 	this.nameDiv = this.playerdiv.find('.name')[0];
 	$(this.nameDiv).html(name);
-	$(this.playerDiv).append(newCardsButton);
+	this.playerdiv.append(newCardsButton);
 	
 	this.startTurn = function() {
 		this.pulse();
@@ -482,13 +482,8 @@ function updateTurnDisplay() {
 	$('#current_player').html(players[turn].name);
 }
 
-<<<<<<< HEAD
-		}
-	}
-		
-=======
+
 $(document).ready( function() {
->>>>>>> FETCH_HEAD
 	players.push( new Player("Morris", true, '#token1') );
 	players.push( new Player("You", false, '#token2') );
 	players.push( new Player("Priscilla", true, '#token3') );
@@ -505,19 +500,6 @@ $(document).ready( function() {
 		}
 	}
 	
-<<<<<<< HEAD
-=======
 	nextPlayer();
 	
-	//~ $('#You .cards').click(  function(event) {
-		//~ players[1].playCard( event );
-	//~ } );
-	//~ $('.allcardsbtn').click( function() {
-		//~ players[1].switchAllCards();
-	//~ });
-	
-
->>>>>>> FETCH_HEAD
-	//move, move, move
-	//end the game, restart if requested
 });
