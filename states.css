@@ -1,7 +1,6 @@
 h1 { background: #88a; color: #fff; margin: 0; padding: 10px; }
 p { font-family: helvetica, sans }
 .newsection { clear: both }
-
 #instructions { 
 	border: 2px solid #F6B;
 	background: #BCD;
@@ -25,6 +24,7 @@ p { font-family: helvetica, sans }
 #status p { display: inline; padding: 20px; }
 .location { background: #def; border: 1px solid #99b; padding: 0 0.3em }
 .cards { height: 2em; }
+.card { color: #730; margin:.25em}
 .cardbtn { 
 	background: #efeff8;
 	color: #730; 
@@ -32,7 +32,11 @@ p { font-family: helvetica, sans }
 	padding:3px; 
 	font: 1em sans-serif; 
 	z-index: 300; 
+	cursor:pointer; 
 }
+.cardbtn:hover { color: #6a0; background: #fff8f0 }
+
+
 .adjacent { border-bottom: 3px solid #eb6; }
 .human .cardbtn { cursor: pointer; }
 .human div.cardsinhand {
@@ -80,6 +84,7 @@ div.discards p {
 .player-info p { margin: 0; color: #777; font-size:14px; }
 span.objective, span.location { color: #000 }
 .name { font-weight: bold; color: #555; border-bottom: 1px solid #ddd }
+
 #gameboard { position: relative; top:0 width:900px; height:612px;
 	overflow:hidden; border: 2px solid #aaaaaa }
 .pawn { width:10px; height:10px; border: 1px solid #fff; overflow:hidden: position:absolute }
