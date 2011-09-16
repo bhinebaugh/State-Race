@@ -484,6 +484,24 @@ function updateTurnDisplay() {
 
 
 $(document).ready( function() {
+	$("#instructions #done").bind("click", function(){
+		$("#help").show();
+		animate();
+	});
+	$("#help").bind("click", function(){
+		$(this).hide();
+		animate();
+	});
+	
+	var animate = function() {
+		$("#instructions").animate({
+			opacity: 0.9,
+			height: 'toggle'
+			}, 500, function() {
+			// Animation complete.
+		});
+	};
+
 	players.push( new Player("Morris", true, '#token1') );
 	players.push( new Player("You", false, '#token2') );
 	players.push( new Player("Priscilla", true, '#token3') );
