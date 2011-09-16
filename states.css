@@ -46,18 +46,26 @@ p { font-family: helvetica, sans }
 	visibility: hidden;
 	font-size: 75%;
 	color: #888;
-	overflow: hidden;
+	float: left;
+	width: 75%;
 }
 .destination-drop {
 	visibility: visible;
 	background: #e0e0e0;
-	padding: 2px;
 	border: 1px solid #aaa;
 }
 .destination-over {
 	background: #d0dfd0;
 	border: 2px solid #8d5;
 }
+.position-display { float: left }
+.location { 
+	visibility: visible;
+	font-family: helvetica, sans;
+	width: 20%;
+}
+.destination-note { }
+
 div.discards {
 	background: #fdd;
 	border: 1px solid #caa;
