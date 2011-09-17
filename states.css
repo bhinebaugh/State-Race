@@ -1,6 +1,31 @@
-h1 { background: #88a; color: #fff; margin: 0; padding: 10px; }
-p { font-family: helvetica, sans }
-.newsection { clear: both }
+h1 {
+	background: #8888aa;
+	color: #ffffff;
+	margin: 0;
+	padding: 10px;
+}
+p {
+	font-family: 'Helvetica', sans-serif;
+}
+.newsection {
+	clear: both;
+}
+#status {
+	font-size: 80%;
+}
+#status p {
+	display: inline;
+	padding: 20px;
+}
+.location {
+	background: #ddeeff;
+	border: 1px solid #9999bb;
+	padding: 0 0.3em;
+}
+.cards {
+	height: 2em;
+}
+
 #instructions { 
 	border: 2px solid #F6B;
 	background: #BCD;
@@ -20,82 +45,128 @@ p { font-family: helvetica, sans }
 	top: 10px;
 }
 
-#status { font-size: 80%; }
-#status p { display: inline; padding: 20px; }
-.location { background: #def; border: 1px solid #99b; padding: 0 0.3em }
-.cards { height: 2em; }
-.card { color: #730; margin:.25em}
 .cardbtn { 
 	background: #efeff8;
-	color: #730; 
+	color: #773300; 
 	margin:3px;
 	padding:3px; 
 	font: 1em sans-serif; 
 	z-index: 300; 
-	cursor:pointer; 
 }
-.cardbtn:hover { color: #6a0; background: #fff8f0 }
-
-
-.adjacent { border-bottom: 3px solid #eb6; }
-.human .cardbtn { cursor: pointer; }
+.adjacent {
+	border-bottom: 3px solid #eebb66;
+}
+.human .cardbtn {
+	cursor: pointer;
+}
 .human div.cardsinhand {
-	border: 1px dashed #ccc;
+	border: 1px dashed #cccccc;
 }
 .destination { 
-	visibility: hidden;
+	color: #888888;
 	font-size: 75%;
-	color: #888;
-	float: left;
-	width: 75%;
+	overflow: hidden;
+	visibility: hidden;
 }
 .destination-drop {
-	visibility: visible;
 	background: #e0e0e0;
 	border: 1px solid #aaa;
+	padding: 2px;
+	visibility: visible;
 }
 .destination-over {
 	background: #d0dfd0;
 	border: 2px solid #8d5;
 }
-.position-display { float: left }
-.location { 
-	visibility: visible;
-	font-family: helvetica, sans;
-	width: 20%;
-}
-.destination-note { }
-
 div.discards {
-	background: #fdd;
-	border: 1px solid #caa;
+	background: #ffdddd;
+	border: 1px solid #ccaaaa;
 	margin: auto;
 	padding: 10px;
 	text-align: center;
 }
 div.discards p {
-	font: 0.8em Arial, sans-serif;
-	color: #daa;
+	color: #ddaaaa;
+	font: 0.8em 'Arial', sans-serif;
 }
 .discards .control {
-	border-top: 1px solid #fa6;
-	font-size: 80%; margin: 5px; padding: 3px;
+	border-top: 1px solid #ffaa66;
+	font-size: 80%;
+	margin: 5px;
+	padding: 3px;
 	text-align: right;
 }
 .discards .allcardsbtn { 
-	background: #fa9; border: solid 1px #7a7; cursor: pointer; 
+	background: #ffaa99;
+	border: solid 1px #77aa77;
+	color: #444422;
+	cursor: pointer; 
 	padding: 3px;
-	color: #442;  text-align: center;
+	text-align: center;
 }
 
-.player-info { width: 250px; float: left; margin: 20px; padding: 5px; border: solid 1px #888;}
-.player-info p { margin: 0; color: #777; font-size:14px; }
-span.objective, span.location { color: #000 }
-.name { font-weight: bold; color: #555; border-bottom: 1px solid #ddd }
+.player-info {
+	border: solid 1px #888888;
+	float: left;
+	margin: 20px;
+	padding: 5px;
+	width: 250px;
+}
+.player-info.current {
+	box-shadow: 0 0 12px rgb(255, 150, 20);
+}
+.player-info.current.start {
+	box-shadow: 0 0 12px rgb(255, 127, 20);
+	-khtml-transition: box-shadow 0.75s ease-in-out 0;
+	-moz-transition: box-shadow 0.75s ease-in-out 0;
+	-o-transition: box-shadow 0.75s ease-in-out 0;
+	-webkit-transition: box-shadow 0.75s ease-in-out 0;
+	transition: box-shadow 0.75s ease-in-out 0;
+}
 
-#gameboard { position: relative; top:0 width:900px; height:612px;
-	overflow:hidden; border: 2px solid #aaaaaa }
-.pawn { width:10px; height:10px; border: 1px solid #fff; overflow:hidden: position:absolute }
-#token1 { background-color:#a82 }
-#token2 { background-color:#28a }
-#token3 { background-color:#8a2 }
+.player-info.current.end {
+	box-shadow: 0 0 6px rgb(255, 220, 20);
+	-khtml-transition: box-shadow 0.75s ease-in-out 0;
+	-moz-transition: box-shadow 0.75s ease-in-out 0;
+	-o-transition: box-shadow 0.75s ease-in-out 0;
+	-webkit-transition: box-shadow 0.75s ease-in-out 0;
+	transition: box-shadow 0.75s ease-in-out 0;
+}
+.player-info p {
+	color: #777777;
+	font-size: 14px;
+	margin: 0;
+}
+span.objective, 
+span.location {
+	color: #000000;
+}
+.name {
+	border-bottom: 1px solid #dddddd;
+	color: #555555;
+	font-weight: bold;
+}
+#gameboard {
+	border: 2px solid #aaaaaa;
+	height: 612px;
+	overflow: hidden;
+	position: relative;
+	top: 0;
+	width: 900px;
+}
+.pawn {
+	border: 1px solid #ffffff;
+	height: 10px;
+	overflow: hidden;
+	position: absolute;
+	width: 10px;
+}
+#token1 {
+	background-color: #aa8822;
+}
+#token2 {
+	background-color: #2288aa;
+}
+#token3 {
+	background-color: #88aa22;
+}
