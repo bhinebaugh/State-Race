@@ -81,21 +81,21 @@ function Player(name, nonhuman, pawnid) {
 		this.location = newLocation;
 		this.playerdiv.find('.location')[0].innerHTML = this.location;
 		this.icon.css({
-			'left': states[this.location].location[0],
-			'top': states[this.location].location[1],
+			'left': stateObjects[this.location].position[0],
+			'top': stateObjects[this.location].position[1],
 			'position': 'absolute'
 		});
 	}
 	this.calcDistance = function( state ) {
-		var otherLoc = states[state].location;
-		var myLoc = states[this.location].location;
+		var otherLoc = stateObjects[state].position;
+		var myLoc = stateObjects[this.location].position;
 		return Math.abs(myLoc[0]-otherLoc[0]) + Math.abs(myLoc[1]-otherLoc[1]);
 	}
 
 	this.setMission = function( distance ) {
 		var minDiff = 10000;
 		var currMin = randomState();
-		for (var state in states) {
+		for (var state in stateObjects) {
 			diff = Math.abs(this.calcDistance(state) - distance);
 			if(diff < minDiff) {
 				minDiff = diff;
