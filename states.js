@@ -82,7 +82,7 @@ stateObjects = {
 	"NC" : new State("NC","North Carolina",['VA','TN','GA','SC'],[800,335]),
 	"SC" : new State("SC","South Carolina",['NC','GA'],[770,380]),
 	"GA" : new State("GA","Georgia",['TN','AL','FL','SC','NC'],[730,425]),
-	"FL" : new State("AK","Florida",['GA','AL'],[780,525])
+	"FL" : new State("FL","Florida",['GA','AL'],[780,525])
 }
 /*
 **	Possible refactoring note:
