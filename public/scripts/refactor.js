@@ -5,7 +5,7 @@ Map = {
     bottom: 23.079732,
     left: -125.712894,
     right: -65.419925,
-    scale: 20,
+    scale: 10,
     top: 49.267805
 }
 
@@ -44,7 +44,7 @@ StateMapView = Backbone.View.extend({
     }
 })
 
-TheUSA = Backbone.Collection.extend({
+Nation = Backbone.Collection.extend({
     model: State,
     initialize: function (attributes, options) {
         this.add(StateDefaults);
@@ -58,8 +58,8 @@ TheUSA = Backbone.Collection.extend({
     }
 });
 
-usa = new TheUSA;
-usa_views = usa.map(function (state) {
+usa = new Nation;
+usa.each(function (state) {
     var stateView = new StateMapView({
         model: state,
         id: 'state-map-' + state.get('id')
