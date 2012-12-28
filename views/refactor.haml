@@ -3,9 +3,23 @@
     %head
         %meta{:charset => 'utf-8'}
         %title State Race (Refactor)
+        %link{:href => 'css/bootstrap.min.css', :rel => 'stylesheet', :type => 'text/css'}
+        %link{:href => 'css/bootstrap-responsive.min.css', :rel => 'stylesheet', :type => 'text/css'}
+        %link{:href => 'css/main.css', :rel => 'stylesheet', :type => 'text/css'}
     %body
+        .container-fluid
+            %h1 State Race
+            #board.row-fluid
+            #players.row-fluid
+        %script#state-map-view{:type => 'text/js-template'}
+            = haml :state_map
+        %script#state-card-view{:type => 'text/js-template'}
+            = haml :state_card
+        %script#player-view{:type => 'text/js-template'}
+            = haml :player
         %script{:src => 'scripts/jquery.min.js', :type => 'text/javascript'}
         %script{:src => 'scripts/underscore.js', :type => 'text/javascript'}
         %script{:src => 'scripts/backbone.js', :type => 'text/javascript'}
+        %script{:src => 'scripts/bootstrap.min.js', :type => 'text/javascript'}
         %script{:src => 'data/states.js', :type => 'text/javascript'}
         %script{:src => 'scripts/refactor.js', :type => 'text/javascript'}

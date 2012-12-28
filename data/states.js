@@ -77,7 +77,7 @@ var StateDefaults = [
         longitude: -157.826182
     },
     {
-        id: 'iD',
+        id: 'ID',
         name: 'Idaho',
         capital: 'Boise',
         latitude: 43.613739,
