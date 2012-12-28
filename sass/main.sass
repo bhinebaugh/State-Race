@@ -1,0 +1,42 @@
+#board
+    position: relative
+    .nation-map
+        .state-map
+            background-color: rgba(180, 180, 180, 0.5)
+            border-radius: 50%
+            color: white
+            list-style: none
+            padding: 2%
+            position: absolute
+
+#players
+    margin: 1em 0
+    .player
+        border: 1px solid lightgray
+        border-radius: 1em 1em 0 0
+        list-style: none
+        padding: 1em
+        @media (max-width: 767px)
+            border-left: none
+            border-right: none
+            border-top: none
+            border-radius: 0
+            &:last-of-type
+                border-bottom: none
+
+    @media (max-width: 767px)
+        border: 1px solid lightgray
+        border-radius: 1em
+
+    .card
+        margin: 0
+        .card-state
+            background: white
+            border: 1px solid lightgray
+            border-radius: 0.5em
+            display: inline-block
+            list-style: none
+            margin: 0.15em
+            padding: 1em 0
+            text-align: center
+            width: 2.5em

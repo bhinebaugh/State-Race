@@ -1,3 +1,6 @@
 # Temp files by extension
 *.swp
 *.*~
+
+# Cached files
+.sass-cache/*
