@@ -19,7 +19,24 @@ App.Router = Ember.Router.extend({
         })
     })
 });
- 
+
+/*
+ *  NOTE: The problem with doing it this way is that the templates are dumb about attaching an appropriate
+ *  controller when using {{view App.StateView}}, so you end up with an {{#each}} that passes the correct
+ *  model data, but stays in the context of the original controller. The model data is accessible because
+ *  the NationController (specifically the instance App.router.nationController) has access to the model
+ *  instance App.nation, and it can travel down the chain to App.nation.states for the each loop and pass
+ *  a reference to that state on to the App.StateView. It stays in the context of the original controller
+ *  (App.router.nationController) so when we get to the state view, variables like {{id}} work because the
+ *  nation controller passes through to the model to find the value. If, however, we try to do something in 
+ *  the controller to make, say, {{latitude}} more useful, we want to use {{controller.latitude}} in the 
+ *  template, which refers only to the nation controller because no state controller has been created yet. 
+ *  So either the nation controller awkwardly handles the latitude (and I'm not even sure if you could 
+ *  indicate the correct State instance at that point), or the view has to manipulate model data, the 
+ *  avoidance of which is the whole point of using MVC and creating a StateController class.
+ *
+ *  TLDR: Use outlets instead of nested {{view}}s.
+ */
 
 
 /*  ## Models ##  */
