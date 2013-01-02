@@ -1,6 +1,7 @@
 # Temp files by extension
 *.swp
 *.*~
+*.DS_Store
 
 # Cached files
 .sass-cache/*
