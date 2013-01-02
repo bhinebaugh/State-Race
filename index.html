@@ -2,28 +2,56 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="css/main.css" rel="stylesheet">
         <script type="text/javascript" src="libs/jquery.min.js"></script>
         <script type="text/javascript" src="libs/handlebars.js"></script>
         <script type="text/x-handlebars" data-src="views/app.hbs.html" data-template-name="application">
-            <h1>State Race</h1>
-            <div id="board">{{outlet board}}</div>
-            <div id="players">{{outlet players}}</div>
+            <div class="container-fluid">
+                <h1>State Race</h1>
+                <div id="board">{{outlet board}}</div>
+                <div id="players">{{outlet players}}</div>            
+            </div>
         </script>
-        <script type="text/x-handlebars" data-src="views/map.hbs.html" data-template-name="map">
-            <h2>Map</h2>
+        <script type="text/x-handlebars" data-template-name="map">
+            <h2>Map: {{name}}</h2>
             <ul>
-            {{#each state in controller}}
+            {{#each state in states}}
                 {{#with state}}
-                <li>{{id}}</li>
+                <li>{{view App.StateView}}</li>
                 {{/with}}
             {{/each}}
             </ul>
         </script>
-        <script type="text/x-handlebars" data-src="views/players.hbs.html" data-template-name="players">
-            <h2>Players</h2>        
+        <script type="text/x-handlebars" data-template-name="state">
+            <b>{{id}}</b>
+        </script>   
+        <script type="text/x-handlebars" data-template-name="players">
+            <h2>Players</h2>
+            {{#each player in App.players}}
+                {{#with player}}
+                    {{view App.PlayerView}}
+                {{/with}}
+            {{/each}}
         </script>
-        <!-- script type="text/javascript" src="libs/template_loader.js"></script --> 
-        <script type="text/javascript" src="libs/ember.js"></script>
+        <script type="text/x-handlebars" data-template-name="player">
+            <h3>{{name}}: {{hand.cards.length}}</h3>
+            {{#with hand}}
+                {{view App.HandView}}
+            {{/with}}
+        </script>
+        <script type="text/x-handlebars" data-template-name="hand">
+            {{#each card in cards}}
+                {{#with card}}
+                    {{view App.CardView}}
+                {{/with}}
+            {{/each}}
+        </script>
+        <script type="text/x-handlebars" data-template-name="card">
+            {{state.id}}
+        </script>
+        <script type="text/javascript" src="libs/ember.min.js"></script>
         <script type="text/javascript" src="data/states.js"></script>        
         <script type="text/javascript" src="app.js"></script>        
     </head>
