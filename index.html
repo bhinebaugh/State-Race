@@ -8,50 +8,31 @@
         <script type="text/javascript" src="libs/jquery.min.js"></script>
         <script type="text/javascript" src="libs/handlebars.js"></script>
         <script type="text/x-handlebars" data-src="views/app.hbs.html" data-template-name="application">
-            <div class="container-fluid">
-                <h1>State Race</h1>
-                <div id="board">{{outlet board}}</div>
-                <div id="players">{{outlet players}}</div>            
-            </div>
+            <h1>State Race</h1>
+            {{outlet board}}
+            {{outlet deck}}
+            {{outlet players}}
         </script>
         <script type="text/x-handlebars" data-template-name="map">
-            <h2>Map: {{name}}</h2>
-            <ul>
-            {{#each state in states}}
-                {{#with state}}
-                <li>{{view App.StateView}}</li>
-                {{/with}}
-            {{/each}}
-            </ul>
+            <h2>{{name}}</h2>
+            {{length}}
+            {{view view.stateCollectionView}}
         </script>
-        <script type="text/x-handlebars" data-template-name="state">
-            <b>{{id}}</b> {{controller.foo}}
-        </script>   
-        <script type="text/x-handlebars" data-template-name="players">
-            <h2>Players</h2>
-            {{#each player in App.players}}
-                {{#with player}}
-                    {{view App.PlayerView}}
-                {{/with}}
-            {{/each}}
+        <script type="text/x-handlebars" data-template-name="deck">
+            <h3>Draw</h3>
+            {{view view.drawView contentBinding="controller.drawPile"}}
+            <h3>Discard</h3>
+            {{view view.discardView}}
         </script>
         <script type="text/x-handlebars" data-template-name="player">
-            <h3>{{name}}: {{hand.cards.length}}</h3>
-            {{#with hand}}
-                {{view App.HandView}}
-            {{/with}}
-        </script>
-        <script type="text/x-handlebars" data-template-name="hand">
-            {{#each card in cards}}
-                {{#with card}}
-                    {{view App.CardView}}
-                {{/with}}
-            {{/each}}
-        </script>
+            <h3>{{view.content.name}}</h3>
+            <a {{action draw target="controller"}}>Draw</a>
+            {{view view.handView contentBinding="view.content.cards"}}
+        </script>        
         <script type="text/x-handlebars" data-template-name="card">
-            {{state.id}}
-        </script>
-        <script type="text/javascript" src="libs/ember.min.js"></script>
+            {{view.content.id}}
+        </script>        
+        <script type="text/javascript" src="libs/ember.js"></script>
         <script type="text/javascript" src="data/states.js"></script>        
         <script type="text/javascript" src="app.js"></script>        
     </head>

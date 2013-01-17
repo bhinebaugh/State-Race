@@ -14,34 +14,34 @@ App.Router = Ember.Router.extend({
             route: '/',
             connectOutlets: function (router, context) {
                 router.get('applicationController').connectOutlet('board', 'nation', App.nation);
+                router.get('applicationController').connectOutlet('deck', 'deck');
                 router.get('applicationController').connectOutlet('players', 'players', App.players);
             }
         })
     })
 });
 
+
 /*
- *  NOTE: The problem with doing it this way is that the templates are dumb about attaching an appropriate
- *  controller when using {{view App.StateView}}, so you end up with an {{#each}} that passes the correct
- *  model data, but stays in the context of the original controller. The model data is accessible because
- *  the NationController (specifically the instance App.router.nationController) has access to the model
- *  instance App.nation, and it can travel down the chain to App.nation.states for the each loop and pass
- *  a reference to that state on to the App.StateView. It stays in the context of the original controller
- *  (App.router.nationController) so when we get to the state view, variables like {{id}} work because the
- *  nation controller passes through to the model to find the value. If, however, we try to do something in 
- *  the controller to make, say, {{latitude}} more useful, we want to use {{controller.latitude}} in the 
- *  template, which refers only to the nation controller because no state controller has been created yet. 
- *  So either the nation controller awkwardly handles the latitude (and I'm not even sure if you could 
- *  indicate the correct State instance at that point), or the view has to manipulate model data, the 
- *  avoidance of which is the whole point of using MVC and creating a StateController class.
+ *  ## Models ##
+ *  
+ *  The goal here is to use as few models as possible and only to model
+ *  real data. This is in contrast to the our Backbone implementation,
+ *  which included a model, view, and controller specifically for each
+ *  data type. So if a dataset only really exists at the controller layer, 
+ *  we avoid creating an unused model behind it.
  *
- *  TLDR: Use outlets instead of nested {{view}}s.
- */
-
-
-/*  ## Models ##  */
-
+ *  ### Nation Model ###
+*/
 App.Nation = Ember.Object.extend({
+/*
+ *  Using init creates a states attribute that is unique to each instance.
+ *  The nation is a thin wrapper around a collection of states. When
+ *  instantiated, it gains a name and a set of bounds, defining the latitude
+ *  and longitude limits of the map (used for creating the initial map view).
+*/
+    name: null,
+    bounds: null,
     init: function () {
         this.set('states', this.states.map(function (data) {
             return App.State.create(data);
@@ -49,108 +49,231 @@ App.Nation = Ember.Object.extend({
     }
 });
 
+//  ### State Model ###
+
 App.State = Ember.Object.extend();
 
-App.Card = Ember.Object.extend();;
-
-App.Hand = Ember.Object.extend({
-    init: function () {
-        this.set('cards', Ember.A());
-    }
-});
-
-App.Deck = App.Hand.extend({
-    init: function () {
-        this.set('cards', this.nation.states.map(function (state) {
-            return App.Card.create({state: state});
-        }));
-    }
-});
-
+/*
+ *  ### Player Model ###
+ *  
+ *  The player has a name and a hand of cards, which starts as an empty Array.
+ *  A player's location indicates where they currently are on the map. Their 
+ *  target is where they need to go in order to win the game. Any call to create
+ *  a new player object should set the player name, at minimum. If the player
+ *  is computer controlled, human should be set false at instantiation.
+*/
 App.Player = Ember.Object.extend({
+    human: true,
+    name: 'Player',
+    location: null,
+    target: null,
+/*
+ *  The cards property must be created in the init function to avoid all players
+ *  sharing a reference to one single "Class-level" array of cards.
+*/
     init: function () {
-        this.set('hand', App.Hand.create());
+        this.set('cards', []);
+    },
+    draw: function (cards) {
+        if (!cards.length) {
+            cards = [cards];
+        }
+        this.get('cards').pushObjects(cards);
     }
 });
 
+/*  
+ *  ## Controllers ##  
+ *
+ *  This implementation puts a lot of emphasis on the controllers. Most gameplay
+ *  logic belongs here, and so constructs like hands and decks are only defined in 
+ *  the controller layer.
+ *
+ *  ### Application Controller ###
+*/
+App.ApplicationController = Ember.ArrayController.extend();
 
-/*  ## Views ##  */
-
-App.ApplicationView = Ember.View.extend({
-    templateName: 'application'
-});
-
-
-App.NationView = Ember.View.extend({
-    templateName: 'map',
-    classNames: ['nation-map']
-});
-
-App.StateView = Ember.View.extend({
-    templateName: 'state',
-    classNames: ['state-map']
-});
-
-App.HandView = Ember.View.extend({
-    templateName: 'hand'
-});
-
-App.CardView = Ember.View.extend({
-    templateName: 'card',
-    classNames: ['card']
-});
-
-App.PlayersView = Ember.View.extend({
-    templateName: 'players',
-    classNames: ['players', 'row-fluid']
-});
-
-App.PlayerView = Ember.View.extend({
-    templateName: 'player',
-    classNames: ['player', 'span3']
-});
-
-
-/*  # Controllers #  */
-
-App.ApplicationController = Ember.Controller.extend();
+//  ### Nation Controller ###
 
 App.NationController = Ember.ObjectController.extend({
-    foo: 'bap'
+    //  Returns a string in the form of "N State(s)"
+    length: function () {
+        var length, plural;
+        length = this.get('content.states.length');
+        plural = (1 === length) ? 'State' : 'States';
+        return [length, plural].join(' ');
+    }.property('content.states')
 });
 
-App.StateController = Ember.ObjectController.extend({
-    foo: 'bar',
-    latitude: function () {
-        return Math.floor(this.get('content.latitude'));
-    }.property('content.latitude')
+//  ### Players Controller ###
+
+App.PlayersController = Ember.ArrayController.extend({
+    draw: function (e, num) {
+        var card, name, player;
+        num = num || 1;
+        card = App.router.deckController.deal(num);
+        name = e.view.get('content.name');
+        player = this.findProperty('name', name);
+        player.draw(card);
+    },
 });
 
-App.CardController = Ember.ObjectController.extend();
+//  ### Hand Controller
 
-App.HandController = Ember.ArrayController.extend();
+App.HandController = Ember.ArrayController.extend({
+    isFaceUp: true,
+    isCollapsed: false
+});
 
-App.PlayersController = Ember.ArrayController.extend();
+//  ### Deck Controller ###
 
-App.PlayerController = Ember.ObjectController.extend();
+App.DeckController = App.HandController.extend({
+    cards: [],
+    drawPile: [],
+    discardPile: [],
+    deal: function (num) {
+        var dealt = [];
+        while (dealt.length < num) {
+            dealt.pushObjects(this.get('drawPile').popObject());
+        }
+        return dealt;
+    },
+    shuffle: function () {
+        var deck, shuff;
+        shuff = [];
+        deck = this.get('drawPile');
+        deck.forEach(function (item) {
+            var i = Math.floor(Math.random() * deck.length);
+            while (shuff[i]) {
+                i += 1;
+                if (i > deck.length - 1) {
+                    i = 0;
+                }
+            }
+            shuff[i] = item;
+        });
+        this.set('drawPile', shuff);
+        return this.get('drawPile');
+    },
+    init: function () {
+        this.set('cards', App.nation.get('states'));
+        this.get('drawPile').pushObjects(this.get('cards'));
+    }
+});
+
+//  ## Views ##
+
+//  ### Application View ###
+App.ApplicationView = Ember.View.extend({
+    templateName: 'application',
+    classNames: ['container-fluid']
+});
+
+//  ### Hand View ###
+App.HandView = Ember.CollectionView.extend({
+    classNames: ['hand'],
+    classNameBindings: ['isFaceUp:is-face-up', 'isCollapsed:is-collapsed'],
+    contentBinding: 'controller.content',
+    tagName: 'ul',
+    itemViewClass: Ember.View.extend({
+        templateName: 'card',
+        classNames: ['card']
+    })
+});
+
+//  ### Deck View ###
+App.DeckView = Ember.View.extend({
+    templateName: 'deck',
+    classNames: ['deck'],
+    drawView: App.HandView.extend({
+        contentBinding: 'controller.content.drawPile'
+    }),
+    discardView: App.HandView.extend({
+        contentBinding: 'controller.discardPile',
+        isFaceUp: true
+    })
+});
+
+//  ### Players View ###
+App.PlayersView = Ember.CollectionView.extend({
+    tagName: 'ul',
+    classNames: ['players', 'row-fluid'],
+    contentBinding: 'controller.content',
+    itemViewClass: Ember.View.extend({
+        templateName: 'player',
+        classNames: ['player', 'span3'],
+        handView: App.HandView.extend(),
+        drawClick: function (e) {
+            this.get('content').draw(1, App.router.deckController);
+        }
+    })
+});
+
+//  ### Nation View ###
+App.NationView = Ember.View.extend({
+    templateName: 'map',
+    classNames: ['board'],
+    stateCollectionView: Ember.CollectionView.extend({
+        contentBinding: 'controller.states',
+        classNames: ['nation-map'],
+        didInsertElement: function () {
+            var $_this, height, width, proportion;
+            $_this = this.$();
+            height = this.get('controller.bounds.north') - this.get('controller.bounds.south');
+            width = this.get('controller.bounds.east') - this.get('controller.bounds.west');
+            proportion = Math.abs(height / width);
+            this._super();
+            function handleResize() {
+                $_this.height(proportion * $_this.width());        
+            }
+            handleResize();
+            $(window).on('resize', handleResize);
+        },
+        itemViewClass: Ember.View.extend({
+            tagName: 'abbr',
+            template: Ember.Handlebars.compile('{{view.content.id}}'),
+            classNames: ['state-map'],
+            attributeBindings: ['style', 'title'],
+            style: function () {
+                var nationHeight, nationWidth, top, left;
+                nationHeight = Math.abs(this.get('controller.bounds.north') - this.get('controller.bounds.south'));
+                nationWidth = Math.abs(this.get('controller.bounds.west') - this.get('controller.bounds.east'));
+                top = 100 * (this.get('controller.bounds.north') - this.get('content.latitude')) / nationHeight;
+                left = 100 * (this.get('content.longitude') - this.get('controller.bounds.west')) / nationWidth;
+                return 'left: ' + left + '%;' + 'top: ' + top + '%;';
+            }.property('content.latitude', 'content.longitude'),
+            title: function () {
+                return this.get('content.capital')  + ', ' + this.get('content.name');
+            }.property('content.capital')
+        })
+    })
+});
 
 
-/*  ## Instantiation and Kickoff ##  */
-
+//  ## Initialization and Bootstrapping ##
 App.nation = App.Nation.create({
     name: 'United States of America',
-    states: StateDefaults
+    states: StateDefaults,
+    bounds: {
+        east: -64.546386,
+        north: 48.922499,
+        south: 22.024546,
+        west: -125.433105
+    }
 });
 
-App.deck = App.Deck.create({
-    nation: App.nation
-});
-
-App.players = Ember.A([
-    App.Player.create({name: 'Adam'}),
-    App.Player.create({name: 'Ben'}),
-    App.Player.create({name: 'Charlie'}),
-    App.Player.create({name: 'David'})
-]);
+App.players = [
+    App.Player.create({name: 'Dave'}),
+    App.Player.create({name: 'Pat'}),
+    App.Player.create({name: 'Nate'}),
+    App.Player.create({name: 'Will'})
+];
 
 App.initialize();
+
+App.router.get('deckController').shuffle();
+App.players.forEach(function (player) {
+    var cards, num = 5;
+    cards = App.router.get('deckController').deal(num);
+    player.draw(cards);
+})

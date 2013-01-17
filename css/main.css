@@ -1,58 +1,123 @@
-/* line 1, ../sass/main.sass */
+/* line 5, ../sass/main.sass */
 li {
   list-style: none;
 }
 
-/* line 4, ../sass/main.sass */
-#board {
+/* line 9, ../sass/main.sass */
+.board .nation-map {
   position: relative;
 }
-/* line 7, ../sass/main.sass */
-#board .nation-map .state-map {
+/* line 11, ../sass/main.sass */
+.board .nation-map .state-map {
   background-color: rgba(180, 180, 180, 0.5);
   border-radius: 50%;
   color: white;
+  cursor: pointer;
+  height: 2em;
+  line-height: 2em;
   list-style: none;
-  padding: 2%;
+  padding: 1.5%;
   position: absolute;
+  text-align: center;
+  width: 2em;
+}
+/* line 23, ../sass/main.sass */
+.board .nation-map .state-map:nth-of-type(3n + 1) {
+  background-color: rgba(220, 70, 50, 0.5);
+}
+/* line 25, ../sass/main.sass */
+.board .nation-map .state-map:nth-of-type(3n + 2) {
+  background-color: rgba(70, 90, 220, 0.5);
 }
 
-/* line 15, ../sass/main.sass */
-#players {
+/* line 28, ../sass/main.sass */
+.hand {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+/* line 32, ../sass/main.sass */
+.hand .card {
+  background: whitesmoke;
+  border: 1px solid #b4b4b4;
+  border-radius: 0.5em;
+  box-shadow: -0.1em 0.2em 0.2em gray;
+  color: darkgrey;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.5em;
+  height: 4em;
+  line-height: 4em;
+  margin: 0.5em -1em 0 0;
+  padding: 0;
+  position: relative;
+  text-align: center;
+  width: 3em;
+}
+/* line 48, ../sass/main.sass */
+.hand .card:nth-of-type(2n) {
+  top: 0.1em;
+}
+/* line 50, ../sass/main.sass */
+.hand .card:nth-of-type(3n + 2) {
+  top: -0.05em;
+}
+/* line 52, ../sass/main.sass */
+.hand .card:nth-of-type(7n + 1) {
+  top: 0.05em;
+}
+/* line 54, ../sass/main.sass */
+.hand .card:hover {
+  background: white;
+  color: rgba(220, 70, 50, 0.5);
+  top: -0.25em;
+  z-index: 1000;
+}
+/* line 60, ../sass/main.sass */
+.hand.is-collapsed {
+  border: 1px solid #b4b4b4;
+  border-radius: 0.5em;
+  height: 1em;
+  width: 1.5em;
+  padding: 0.5em 0.25em;
+}
+/* line 66, ../sass/main.sass */
+.hand.is-collapsed .card {
+  display: none;
+}
+/* line 68, ../sass/main.sass */
+.hand.is-collapsed .card.top {
+  display: inline-block;
+}
+
+/* line 71, ../sass/main.sass */
+.players {
   margin: 1em 0;
 }
-/* line 17, ../sass/main.sass */
-#players .player {
+/* line 73, ../sass/main.sass */
+.players .player {
   border: 1px solid lightgrey;
+  border-radius: 1em 1em 0 0;
   list-style: none;
   padding: 1em;
 }
 @media (max-width: 767px) {
-  /* line 17, ../sass/main.sass */
-  #players .player {
+  /* line 73, ../sass/main.sass */
+  .players .player {
     border-left: none;
     border-right: none;
     border-top: none;
+    border-radius: 0;
   }
-  /* line 25, ../sass/main.sass */
-  #players .player:last-of-type {
+  /* line 83, ../sass/main.sass */
+  .players .player:last-of-type {
     border-bottom: none;
   }
 }
 @media (max-width: 767px) {
-  /* line 15, ../sass/main.sass */
-  #players {
+  /* line 71, ../sass/main.sass */
+  .players {
     border: 1px solid lightgrey;
+    border-radius: 1em;
   }
-}
-/* line 31, ../sass/main.sass */
-#players .card {
-  background: white;
-  border: 1px solid lightgrey;
-  display: inline-block;
-  list-style: none;
-  margin: 0;
-  padding: 1em 0;
-  text-align: center;
-  width: 2.5em;
 }
