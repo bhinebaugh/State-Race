@@ -33,14 +33,14 @@ li
         background: whitesmoke
         border: 1px solid rgb(180, 180, 180)
         border-radius: 0.5em
-        box-shadow: -0.1em 0.2em 0.2em gray
+        box-shadow: -0.05em 0.1em 0.1em gray
         color: darkgray
         cursor: pointer
         display: inline-block
         font-size: 1.5em
         height: 4em
         line-height: 4em
-        margin: 0.5em -1em 0 0
+        margin: 0.25em 0.5em 0 0
         padding: 0
         position: relative
         text-align: center
@@ -53,9 +53,8 @@ li
             top: 0.05em
         &:hover
             background: white
+            box-shadow: -0.1em 0.2em 0.2em gray
             color: $red
-            top: -0.25em
-            z-index: 1000
 
     &.is-collapsed
         border: 1px solid rgb(180, 180, 180)
@@ -65,8 +64,16 @@ li
         padding: 0.5em 0.25em
         .card
             display: none
+            margin: 0.5em -2.75em 0 0
+            &:hover
+                margin-right: -0.5em
             &.top
                 display: inline-block
+    &.is-face-up
+        .card
+            background: $red
+            abbr
+                visibility: hidden
 
 .players
     margin: 1em 0
@@ -82,6 +89,8 @@ li
             border-radius: 0
             &:last-of-type
                 border-bottom: none
+        .action-draw
+            display: block
 
     @media (max-width: 767px)
         border: 1px solid lightgray

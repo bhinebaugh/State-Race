@@ -14,7 +14,7 @@ App.Router = Ember.Router.extend({
             route: '/',
             connectOutlets: function (router, context) {
                 router.get('applicationController').connectOutlet('board', 'nation', App.nation);
-                router.get('applicationController').connectOutlet('deck', 'deck');
+                router.get('applicationController').connectOutlet('deck', 'hand', App.drawPile);
                 router.get('applicationController').connectOutlet('players', 'players', App.players);
             }
         })
@@ -111,7 +111,7 @@ App.PlayersController = Ember.ArrayController.extend({
     draw: function (e, num) {
         var card, name, player;
         num = num || 1;
-        card = App.router.deckController.deal(num);
+        card = App.drawPile.deal(num);
         name = e.view.get('content.name');
         player = this.findProperty('name', name);
         player.draw(card);
@@ -122,44 +122,30 @@ App.PlayersController = Ember.ArrayController.extend({
 
 App.HandController = Ember.ArrayController.extend({
     isFaceUp: true,
-    isCollapsed: false
-});
-
-//  ### Deck Controller ###
-
-App.DeckController = App.HandController.extend({
-    cards: [],
-    drawPile: [],
-    discardPile: [],
+    isCollapsed: true,
     deal: function (num) {
         var dealt = [];
         while (dealt.length < num) {
-            dealt.pushObjects(this.get('drawPile').popObject());
+            dealt.pushObjects(this.popObject());
         }
         return dealt;
     },
     shuffle: function () {
-        var deck, shuff;
-        shuff = [];
-        deck = this.get('drawPile');
+        var deck = this.copy();
         deck.forEach(function (item) {
             var i = Math.floor(Math.random() * deck.length);
-            while (shuff[i]) {
+            while (this[i]) {
                 i += 1;
                 if (i > deck.length - 1) {
                     i = 0;
                 }
             }
-            shuff[i] = item;
+            this[i] = item;
         });
-        this.set('drawPile', shuff);
-        return this.get('drawPile');
-    },
-    init: function () {
-        this.set('cards', App.nation.get('states'));
-        this.get('drawPile').pushObjects(this.get('cards'));
+        return this;
     }
 });
+
 
 //  ## Views ##
 
@@ -182,16 +168,9 @@ App.HandView = Ember.CollectionView.extend({
 });
 
 //  ### Deck View ###
-App.DeckView = Ember.View.extend({
+App.DeckView = App.HandView.extend({
     templateName: 'deck',
-    classNames: ['deck'],
-    drawView: App.HandView.extend({
-        contentBinding: 'controller.content.drawPile'
-    }),
-    discardView: App.HandView.extend({
-        contentBinding: 'controller.discardPile',
-        isFaceUp: true
-    })
+    classNames: ['deck']
 });
 
 //  ### Players View ###
@@ -204,7 +183,7 @@ App.PlayersView = Ember.CollectionView.extend({
         classNames: ['player', 'span3'],
         handView: App.HandView.extend(),
         drawClick: function (e) {
-            this.get('content').draw(1, App.router.deckController);
+            this.get('content').draw(1, App.drawPile);
         }
     })
 });
@@ -269,11 +248,15 @@ App.players = [
     App.Player.create({name: 'Will'})
 ];
 
-App.initialize();
-
-App.router.get('deckController').shuffle();
+App.discardPile = App.HandController.create();
+App.drawPile = App.HandController.create({
+    content: App.nation.get('states')
+});
+App.drawPile.shuffle();
 App.players.forEach(function (player) {
     var cards, num = 5;
-    cards = App.router.get('deckController').deal(num);
+    cards = App.drawPile.deal(num);
     player.draw(cards);
 })
+
+App.initialize();

@@ -18,15 +18,9 @@
             {{length}}
             {{view view.stateCollectionView}}
         </script>
-        <script type="text/x-handlebars" data-template-name="deck">
-            <h3>Draw</h3>
-            {{view view.drawView contentBinding="controller.drawPile"}}
-            <h3>Discard</h3>
-            {{view view.discardView}}
-        </script>
         <script type="text/x-handlebars" data-template-name="player">
             <h3>{{view.content.name}}</h3>
-            <a {{action draw target="controller"}}>Draw</a>
+            <a class="action action-draw" {{action draw target="controller"}}>Draw</a>
             {{view view.handView contentBinding="view.content.cards"}}
         </script>        
         <script type="text/x-handlebars" data-template-name="card">
