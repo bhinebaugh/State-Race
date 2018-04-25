@@ -1,6 +1,67 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
 <title>Map Game</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="states.css" />
+</head>
+
+<body>
+
+<div id="app">
+	<h1>State Race, a game of U.S. geography</h1>
+
+	<button id="help" @click="showInstructions = true">
+		Instructions for Gameplay!
+	</button>
+	<div id="instructions" v-show="showInstructions">
+		<p>
+		Lorem Ipsum this is how to play.
+		</p>
+		<button id="done" @click="showInstructions = false">OK!</button>	
+	</div>
+	
+	<div id="status">
+    <p>Turn: {{turnNumber}} ({{currentPlayer}})</p>
+    <p>Ranking: <span id='ranking'>rank</span></p>
+		<p>Cards left in deck: {{cardsRemaining}}</p>
+		<p>Number discarded: {{cardsDiscarded}}</p>
+	</div>
+	<div id="players">
+	<player 
+		v-for="player in players"
+		:key="player.id"
+		:class="{ active: currentPlayer == player.id }"
+		:location="player.location"
+		:name="player.name"
+		:objective="player.objective"
+	></player>
+	</div>
+	<pawn v-for="player in players"
+		  :key="player.id"
+		  :name="player.name"
+		  :location="player.location"
+		  :color="player.color"
+		  :class="{ active: currentPlayer == player.id }"
+	></pawn>
+</div>
+
+<h2 class="newsection">Game Board</h2>
+<div id="gameboard">
+	<embed id="mapvector" src="Color_US_Map_with_borders.svg" width="960" height="800"
+	type="image/svg+xml"
+	pluginspage="http://www.adobe.com/svg/viewer/install/" />
+</div>
+</body>
+
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>-->
+<!--<script type="text/javascript" src="https://unpkg.com/vue"></script>-->
+<!--<script type="text/javascript" src="scripts/vue.min.js"></script>-->
+<!-- production version, optimized for size and speed -->
+<!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
 <script type="text/javascript" src="scripts/jquery.min.js"></script>
 <script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
 <!--script type="text/javascript" src="scripts/raphael.js"></script-->
@@ -12,46 +73,4 @@
 <script type="text/javascript" src="player.js"></script>
 <script type="text/javascript" src="staterace.js"></script>
 
-<!-- google cdn-->
-<link rel="stylesheet" href="states.css" />
-</head>
-
-<body>
-	
-<h1>State Race, a game of U.S. geography</h1>
-
-	<div id="instructions">
-		<p>
-		Lorem Ipsum this is how to play.
-		</p>
-		<button id="done">OK!</button>	
-	</div>	
-
-	<button id="help">
-		Instructions for Gameplay!
-	</button>
-	
-	<div id="status">
-    <p>Turn: <span id='turn_number'>turn</span> (<span id='current_player'></span>)</p>
-    <p>Ranking: <span id='ranking'>rank</span></p>
-		<p>Cards left in deck: <span id='cards_left'>cards in deck</span></p>
-		<p>Number discarded: <span id='cards_discarded'>cards on table</span></p>
-	</div>
-<div id="players">
-
-</div>
-<h2 class="newsection">Game Board</h2>
-<div id="gameboard">
-	<embed id="mapvector" src="Color_US_Map_with_borders.svg" width="960" height="800"
-	type="image/svg+xml"
-	pluginspage="http://www.adobe.com/svg/viewer/install/" />
-
-	<div id="token1" class="pawn"></div>
-	<div id="token2" class="pawn"></div>
-	<div id="token3" class="pawn"></div>
-
-	<!-- <iframe id="usmap" width='960' height='800' frameborder='0' src="Color_US_Map_with_borders.svg"> 
-	</iframe> -->
-</div>
-</body>
 </html>

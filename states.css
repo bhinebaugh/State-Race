@@ -33,8 +33,7 @@ p {
 	top: 200px;
 	left: 200px;
 	height: 150px;
-	width: 300px;	
-	display: none;
+	width: 300px;
 }
 
 #help {
@@ -112,8 +111,12 @@ div.discards p {
 	padding: 5px;
 	width: 250px;
 }
-.player-info.current {
-	box-shadow: 0 0 12px rgb(255, 150, 20);
+.active {  /*used with .player-info and .pawn*/
+	animation: pulse 1.2s linear infinite alternate;
+}
+@keyframes pulse {
+	from { box-shadow: 0 0 12px rgb(255, 127, 20); }
+	to { box-shadow: 0 0 2px rgb(255, 127, 20); }
 }
 .player-info.current.start {
 	box-shadow: 0 0 12px rgb(255, 127, 20);
@@ -155,11 +158,13 @@ span.location {
 	width: 900px;
 }
 .pawn {
-	border: 1px solid #ffffff;
+	/*background-color: #ff9000;*/
+	border: 1px solid #888;
 	height: 10px;
 	overflow: hidden;
 	position: absolute;
 	width: 10px;
+	z-index: 10;
 }
 #token1 {
 	background-color: #aa8822;

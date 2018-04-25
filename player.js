@@ -1,15 +1,23 @@
-/* Intended player HTML:
-	<div id="player-template" class="player-info">
-		<p class="name">(player name)</p>
-		<p>Mission: <span class="objective"></span></p>
-		<p>Position: <span class="location"></span><span class="destination">Travel to...</span></p>
-		<p>Cards</p>
-		<div class="cardsinhand">
-			<div class="cards"></div>
-		</div>
-		<div class="discards"><p>Drag unwanted cards here</p></div>
-	</div>
-*/
+function ranking() {
+	//this may be a hack?
+	//create hash to store (disance -> player) as Key/Value pairs
+	//also store distances in an array
+	//sort array, then get player values in sequence
+	positions = {};
+	values = [];
+	var x = 0;
+	for (var i in players) {
+		positions[players[i].calcDistance(players[i].objective)]= players[i];
+		values[x]=players[i].calcDistance(players[i].objective);
+		x++;
+	}
+	values.sort();
+	var returnString = "";
+	for (var i in players) {
+		returnString += positions[values[i]].name + ", ";
+	}
+	return returnString.slice(0,-2);
+}
 
 /*** the Player object ***/
 function Player(name, nonhuman, pawnid) {
@@ -30,52 +38,9 @@ function Player(name, nonhuman, pawnid) {
 	this.hand = new Array(); // hand has been replaced by cards
 	this.cards = new Array(); // contains cards as DOM elements
 	
-	var playerdiv;
-	this.buildHTML =  function() {
-		$('#players').append('<div id="' + name + '" class="player-info">'
-			+ '<p class="name">(player name)</p>'
-			+ '<p>Mission: <span class="objective"></span></p>'
-			+ '<p class="position-display">Position:</p>'
-			+ '<div class="destination"><span class="location"></span>'
-			+ '<span class="destination-note">Drag new state here</span></div>'
-			+ '<p>Cards</p>'
-			+ '<div class="cardsinhand">'
-			+ '<div class="cards"></div>'
-			+ '</div>'
-			+ '<div class="discards"><p>Drag unwanted cards here</p></div>'
-			+ '</div>');
-		return $('#' + name);
-	};
-	this.playerdiv = this.buildHTML();
 	
 	this.nameDiv = this.playerdiv.find('.name')[0];
-	$(this.nameDiv).html(name);
-	this.playerdiv.append(newCardsButton);
-	
-	this.startTurn = function() {
-		this.pulse();
-		// Identify path options
-		// Play a card
-		// Discard
-	}
-	
-	this.pulse = function() {
-		thisObj = this;
-		if (this.playerdiv.hasClass('start')) {
-			this.playerdiv.removeClass('start');
-			this.playerdiv.addClass('end');
-		} else {
-			this.playerdiv.addClass('start');
-			this.playerdiv.removeClass('end');
-		}
-		this.pulsing = setTimeout(function() {thisObj.pulse();}, 750);
-	}
-	
-	this.endTurn = function() {
-		this.playerdiv.removeClass('end').removeClass('start');
-		clearTimeout(this.pulsing);
-		// Various other cleanup tasks;
-	}
+
 	
 	this.setLocation = function(newLocation) {
 		this.location = newLocation;

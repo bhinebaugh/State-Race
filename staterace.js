@@ -1,98 +1,180 @@
 /*******
-June 2011
+April 2018
 Objective:
 Progress:
 	implement basic game rules
 	object-orient players and cards
+	use Vue for display of players and cards
+To-do:
+	vue draggable for interacting with cards
+	single file components
 Questions:
 	svg display
 	jquery linking
 	indexOf breaks on IE < 9
 ********/
 
-//set up the game
-var newCardsButton = "<p class='control'><span class='or'>or </span><span class='allcardsbtn'>Draw New Cards</span></p>";
-var cardTmpl = "<span class='cardbtn'></span>";
-var round = 1;   // How many rounds of the game have been played
-var turn = -1;    // Index indicating which player's turn it is
-var players = [];
 
-function ranking() {
-	//this may be a hack?
-	//create hash to store (disance -> player) as Key/Value pairs
-	//also store distances in an array
-	//sort array, then get player values in sequence
-	positions = {};
-	values = [];
-	var x = 0;
-	for (var i in players) {
-		positions[players[i].calcDistance(players[i].objective)]= players[i];
-		values[x]=players[i].calcDistance(players[i].objective);
-		x++;
+var deck = {
+	dealHand: function( cardsNeeded ) {
+		var hand = []
+		for (var i=0; i<cardsNeeded; i++) {
+			hand.push(randomState())
+		}
+		return hand
 	}
-	values.sort();
-	var returnString = "";
-	for (var i in players) {
-		returnString += positions[values[i]].name + ", ";
-	}
-	return returnString.slice(0,-2);
 }
 
-function nextPlayer() {
-	if (turn >= 0) {
-		players[turn].playerdiv.removeClass('current');
-		players[turn].endTurn();
-	}
-	if (++turn >= players.length) {
-		turn = 0;
-		round++;
-	}
-	players[turn].playerdiv.addClass('current');
-	players[turn].startTurn();
-	updateTurnDisplay();
-}
+// component should contain a hyphen for use as custom tag in DOM...
+Vue.component('player', {
+	props: ['location','name','objective'],
+	data: function() {
+		return {
+			cards: [],
+			// location: this.initialLocation,
+		}
+	},
+	created: function() {
+		this.cards = deck.dealHand(6)
+	},
+	methods: {
+		handleCardClick: function() { console.log('card clicked') },
+		handleCardeDoubleClick: function() {},
+		handleDrawCards: function() { 
+			console.log('new cards for you!')
+			this.cards = deck.dealHand(this.cards.length)
+		}
+	},
+	template: `
+		<div id="player-template" class="player-info">
+			<p class="name">{{name}}</p>
+			<p>Position: {{location}}</p>
+			<p>Mission: {{objective}}</p>
+			<p>Cards</p>
+			<div class="cardsinhand">
+				<card v-for="card in cards" 
+					v-on:click="handleCardClick"
+					v-bind:location="location"
+					v-bind:abbrev="card"
+					class="cardbtn"
+				>
+				</card>
+			</div>
+			<div class="discards"><p>Drag unwanted cards here</p></div>
+			<p class='control'>
+				<span class='or'>or </span>
+				<span class='allcardsbtn' @click="handleDrawCards">Draw New Cards</span>
+			</p>
+		</div>
+	`
+})
 
-function updateTurnDisplay() {
-	$('#turn_number').html(round);
-	$('#current_player').html(players[turn].name);
-}
+Vue.component('pawn', {
+	props: ['name','color','location'],
+	data: function() {
+		return {
+			x: 50, 
+			y: 30,
+		}
+	},
+	computed: {
+		coordinates: function() {
+			// console.debug('location', this.location)
+			// console.debug('states',stateObjects)
+			return stateInfo[this.location].position
+		},
+		styleObject: function() {
+			return {
+				top: (this.coordinates[1] + 340) + 'px',
+				left: this.coordinates[0] + 'px',
+				backgroundColor: this.color
+			}
+		}
+	},
+	template: `<div class="pawn" :title="name" :style="styleObject">{{location}}</div>`
+})
 
-var animate = function() {
-	$("#instructions").animate({
-		opacity: 0.9,
-		height: 'toggle'
-		}, 500, function() {
-		// Animation complete.
-	});
-};
+// TODO: use vue-draggable here
+Vue.component('card', {
+	props: ['location','abbrev','name'],
+	data: function() {
+		return {
+			highlighted: false
+		}
+	},
+	computed: {
+		adjacent: function() {
+			return stateInfo[this.location].neighbors.includes(this.abbrev)
+		}
+	},
+	methods: {
+		Drag: function(){}
+	},
+	template: `
+		<span v-on:click="highlighted = !highlighted"
+			  v-bind:class="{ adjacent: adjacent }"
+		>
+			{{abbrev}}
+		</span>
+	`
+})
 
-$(document).ready( function() {
-	$("#instructions #done").bind("click", function(){
-		$("#help").show();
-		animate();
-	});
-	$("#help").bind("click", function(){
-		$(this).hide();
-		animate();
-	});
-	
-
-	players.push( new Player("Morris", true, '#token1') );
-	players.push( new Player("You", false, '#token2') );
-	players.push( new Player("Priscilla", true, '#token3') );
-
-	$('#turn_number').html(turn);    //draw cards
-	var distance = 300;
-
-	for (p = 0; p < players.length; p++) {
-		players[p].setLocation( randomState() );
-		players[p].setMission( distance );
-		players[p].dealHand(7);
-		if(!players[p].automated) {
-			players[p].setDroppables();
+vueapp = new Vue({
+	el: '#app',
+	data: {
+		showInstructions: false,
+		turnNumber: 0,
+		currentPlayer: 2,
+		cardsDiscarded: 0,
+		cardsRemaining: 0,
+		distance: 300, // rename this, give more meaningful value
+		players: [
+			{ id: 0, name: "Melvin", automated: true, token: "#token1", color: '#f88', location: "OH" },
+			{ id: 1, name: "You", automated: false, token: "#token2", color: '#8f8', location: "OH" },
+			{ id: 2, name: "Priscilla", automated: true, token: "#token3", color: '#88f', location: "OH" }
+		],
+		round: 0, // game hasn't begun
+		turn: 0
+	},
+	created: function() {
+		for( player of this.players ) {
+			player.location = randomState();
+			// player.objective = this.setMission( this.distance );
+			player.objective = randomState();
+			player.cards = deck.dealHand(7);
+			// if(!players[p].automated) {
+			// 	players[p].setDroppables();
+			// }
+		}
+	},
+	mounted: function() {
+		this.startTurn()
+	},
+	methods: {
+		startTurn: function() {
+			console.log('turn for', this.currentPlayer)
+		},
+		setLocation: function() {
+			return 'AK'
+		},
+		setMission: function() {
+			return 'MO'
+		},
+		nextPlayer: function() {
+			currentPlayer += 1;
+			if (this.currentPlayer == this.players.length) {
+				this.currentPlayer = 0
+			}
+			// this.currentPlayer = (this.currentPlayer.length == this.currentPlayer)? 0 : this.currentPlayer + 1
+			// startTurn() ?
+			// or
+			// this.startTurn();
 		}
 	}
-	
-	nextPlayer();
-	
-});
+})
+
+// $('#turn_number').html(turn);    //draw cards
+// var distance = 300;
+
+
+// vueapp.nextPlayer();
