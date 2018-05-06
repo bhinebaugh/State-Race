@@ -6,14 +6,17 @@ Progress:
 	object-orient players and cards
 	use Vue for display of players and cards
 To-do:
-	vue draggable for interacting with cards
+	vue-cli and building + transpiling
+	vue-draggable for interacting with cards
 	single file components
+	unit tests
 Questions:
 	svg display
 	jquery linking
 	indexOf breaks on IE < 9
 ********/
 
+const MAX_CARDS = 5;
 
 var deck = {
 	dealHand: function( cardsNeeded ) {
@@ -30,35 +33,54 @@ Vue.component('player', {
 	props: ['location','name','objective'],
 	data: function() {
 		return {
-			cards: [],
-			// location: this.initialLocation,
+			cards: []
 		}
 	},
 	created: function() {
-		this.cards = deck.dealHand(6)
+		this.cards = deck.dealHand(MAX_CARDS);
 	},
 	methods: {
-		handleCardClick: function() { console.log('card clicked') },
-		handleCardeDoubleClick: function() {},
+		discard: function(howMany=1) {
+			for( let i=0; i<howMany; i++) {
+				let cardIndex = Math.floor( Math.random()*(this.cards.length+1) )
+				this.cards.splice(cardIndex,howMany)
+			}
+		},
+		handleCardClick: function(c) { 
+			var target = this.cards.indexOf(c)
+			if (target >= 0) {
+				this.cards.splice(target,1)
+				this.$emit('end-turn')
+			} else {
+				console.error('card not found in hand')
+			}
+		},
 		handleDrawCards: function() { 
 			console.log('new cards for you!')
-			this.cards = deck.dealHand(this.cards.length)
+			var numberToDraw = MAX_CARDS - this.cards.length
+			this.cards = this.cards.concat( deck.dealHand(numberToDraw) )
 		}
 	},
+	computed: {
+		neighbors: function() {
+			return stateInfo[this.location].neighbors 
+		}
+	},
+	// <card v-for="card in cards" :abbrev="card" :location="location" v-on:remove-card="handleCardClick(card)" />
 	template: `
 		<div id="player-template" class="player-info">
 			<p class="name">{{name}}</p>
 			<p>Position: {{location}}</p>
 			<p>Mission: {{objective}}</p>
-			<p>Cards</p>
+			<p>Neighbors: <span v-for="st in neighbors">{{st}} </span></p>
 			<div class="cardsinhand">
-				<card v-for="card in cards" 
-					v-on:click="handleCardClick"
-					v-bind:location="location"
-					v-bind:abbrev="card"
-					class="cardbtn"
+				<span v-for="card in cards" 
+					  @click="handleCardClick(card)"
+					  v-bind:class="{ adjacent: neighbors.indexOf(card) >= 0 }"
+					  class="cardbtn"
 				>
-				</card>
+					{{card}}
+				</span>
 			</div>
 			<div class="discards"><p>Drag unwanted cards here</p></div>
 			<p class='control'>
@@ -108,10 +130,9 @@ Vue.component('card', {
 		}
 	},
 	methods: {
-		Drag: function(){}
 	},
 	template: `
-		<span v-on:click="highlighted = !highlighted"
+		<span @click="handleClick"
 			  v-bind:class="{ adjacent: adjacent }"
 		>
 			{{abbrev}}
@@ -136,12 +157,16 @@ vueapp = new Vue({
 		round: 0, // game hasn't begun
 		turn: 0
 	},
+	computed: {
+		player: function() {
+			return this.players[this.currentPlayer]
+		}
+	},
 	created: function() {
 		for( player of this.players ) {
 			player.location = randomState();
 			// player.objective = this.setMission( this.distance );
 			player.objective = randomState();
-			player.cards = deck.dealHand(7);
 			// if(!players[p].automated) {
 			// 	players[p].setDroppables();
 			// }
@@ -151,6 +176,17 @@ vueapp = new Vue({
 		this.startTurn()
 	},
 	methods: {
+		removeCard: function(cardName) {
+			console.log('removing card',cardName)
+			console.log(this.player.cards)
+			cardIndex = this.player.cards.indexOf(cardName)
+			if( cardIndex >= 0 ) {
+				this.player.cards.splice(cardIndex,1)
+				this.nextPlayer()
+			} else {
+				console.log('card not found in hand')
+			}
+		},
 		startTurn: function() {
 			console.log('turn for', this.currentPlayer)
 		},
@@ -161,14 +197,15 @@ vueapp = new Vue({
 			return 'MO'
 		},
 		nextPlayer: function() {
-			currentPlayer += 1;
+			console.debug('next player...')
+			this.currentPlayer += 1;
 			if (this.currentPlayer == this.players.length) {
 				this.currentPlayer = 0
 			}
 			// this.currentPlayer = (this.currentPlayer.length == this.currentPlayer)? 0 : this.currentPlayer + 1
 			// startTurn() ?
 			// or
-			// this.startTurn();
+			this.startTurn();
 		}
 	}
 })

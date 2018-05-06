@@ -47,6 +47,7 @@ p {
 .cardbtn { 
 	background: #efeff8;
 	color: #773300; 
+	cursor: pointer;
 	margin:3px;
 	padding:3px; 
 	font: 1em sans-serif; 
