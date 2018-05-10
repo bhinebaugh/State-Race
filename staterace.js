@@ -30,7 +30,7 @@ var deck = {
 
 // component should contain a hyphen for use as custom tag in DOM...
 Vue.component('player', {
-	props: ['location','name','objective'],
+	props: ['active','location','name','objective'],
 	data: function() {
 		return {
 			cards: []
@@ -46,10 +46,12 @@ Vue.component('player', {
 				this.cards.splice(cardIndex,howMany)
 			}
 		},
-		handleCardClick: function(c) { 
+		handleCardClick: function(c) {
+			if (!this.active) return false;
 			var target = this.cards.indexOf(c)
 			if (target >= 0) {
 				this.cards.splice(target,1)
+				this.handleDrawCards()
 				this.$emit('end-turn')
 			} else {
 				console.error('card not found in hand')
@@ -145,6 +147,7 @@ vueapp = new Vue({
 	data: {
 		showInstructions: false,
 		turnNumber: 0,
+		gameRound: 0,
 		currentPlayer: 2,
 		cardsDiscarded: 0,
 		cardsRemaining: 0,
@@ -199,8 +202,10 @@ vueapp = new Vue({
 		nextPlayer: function() {
 			console.debug('next player...')
 			this.currentPlayer += 1;
+			this.turnNumber += 1;
 			if (this.currentPlayer == this.players.length) {
-				this.currentPlayer = 0
+				this.currentPlayer = 0;
+				this.gameRound += 1;
 			}
 			// this.currentPlayer = (this.currentPlayer.length == this.currentPlayer)? 0 : this.currentPlayer + 1
 			// startTurn() ?

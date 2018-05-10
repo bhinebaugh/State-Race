@@ -33,6 +33,7 @@
 		v-on:end-turn="nextPlayer"
 		:key="player.id"
 		:class="{ active: currentPlayer == player.id }"
+		:active="currentPlayer == player.id"
 		:location="player.location"
 		:name="player.name"
 		:objective="player.objective"
