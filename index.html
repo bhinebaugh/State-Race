@@ -22,7 +22,7 @@
 	</div>
 	
 	<div id="status">
-    <p>Turn: {{turnNumber}} ({{currentPlayer}})</p>
+    <p>Turn: {{turnNumber}} Round: {{gameRound}}</p>
     <p>Ranking: <span id='ranking'>rank</span></p>
 		<p>Cards left in deck: {{cardsRemaining}}</p>
 		<p>Number discarded: {{cardsDiscarded}}</p>
@@ -31,6 +31,7 @@
 	<player 
 		v-for="player in players"
 		v-on:end-turn="nextPlayer"
+		v-on:travel="function(s) { players[currentPlayer].location = s }"
 		:key="player.id"
 		:class="{ active: currentPlayer == player.id }"
 		:active="currentPlayer == player.id"

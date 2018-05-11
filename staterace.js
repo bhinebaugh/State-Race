@@ -51,6 +51,9 @@ Vue.component('player', {
 			var target = this.cards.indexOf(c)
 			if (target >= 0) {
 				this.cards.splice(target,1)
+				if (this.neighbors.indexOf(c) >= 0) {
+					this.$emit('travel', c)
+				}
 				this.handleDrawCards()
 				this.$emit('end-turn')
 			} else {
@@ -58,9 +61,11 @@ Vue.component('player', {
 			}
 		},
 		handleDrawCards: function() { 
-			console.log('new cards for you!')
 			var numberToDraw = MAX_CARDS - this.cards.length
 			this.cards = this.cards.concat( deck.dealHand(numberToDraw) )
+		},
+		handleNewHand: function() {
+			this.cards = deck.dealHand(MAX_CARDS)
 		}
 	},
 	computed: {
@@ -87,7 +92,7 @@ Vue.component('player', {
 			<div class="discards"><p>Drag unwanted cards here</p></div>
 			<p class='control'>
 				<span class='or'>or </span>
-				<span class='allcardsbtn' @click="handleDrawCards">Draw New Cards</span>
+				<span class='allcardsbtn' @click="handleNewHand">Draw New Cards</span>
 			</p>
 		</div>
 	`
@@ -147,7 +152,7 @@ vueapp = new Vue({
 	data: {
 		showInstructions: false,
 		turnNumber: 0,
-		gameRound: 0,
+		gameRound: 0, // game hasn't begun
 		currentPlayer: 2,
 		cardsDiscarded: 0,
 		cardsRemaining: 0,
@@ -157,8 +162,6 @@ vueapp = new Vue({
 			{ id: 1, name: "You", automated: false, token: "#token2", color: '#8f8', location: "OH" },
 			{ id: 2, name: "Priscilla", automated: true, token: "#token3", color: '#88f', location: "OH" }
 		],
-		round: 0, // game hasn't begun
-		turn: 0
 	},
 	computed: {
 		player: function() {
@@ -200,23 +203,15 @@ vueapp = new Vue({
 			return 'MO'
 		},
 		nextPlayer: function() {
-			console.debug('next player...')
 			this.currentPlayer += 1;
 			this.turnNumber += 1;
 			if (this.currentPlayer == this.players.length) {
 				this.currentPlayer = 0;
 				this.gameRound += 1;
 			}
-			// this.currentPlayer = (this.currentPlayer.length == this.currentPlayer)? 0 : this.currentPlayer + 1
-			// startTurn() ?
-			// or
 			this.startTurn();
 		}
 	}
 })
-
-// $('#turn_number').html(turn);    //draw cards
-// var distance = 300;
-
 
 // vueapp.nextPlayer();
