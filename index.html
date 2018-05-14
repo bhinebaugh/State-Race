@@ -9,44 +9,7 @@
 <body>
 
 <div id="app">
-	<h1>State Race, a game of U.S. geography</h1>
 
-	<button id="help" @click="showInstructions = true">
-		Instructions for Gameplay!
-	</button>
-	<div id="instructions" v-show="showInstructions">
-		<p>
-		Lorem Ipsum this is how to play.
-		</p>
-		<button id="done" @click="showInstructions = false">OK!</button>	
-	</div>
-	
-	<div id="status">
-    <p>Turn: {{turnNumber}} Round: {{gameRound}}</p>
-    <p>Ranking: <span id='ranking'>rank</span></p>
-		<p>Cards left in deck: {{cardsRemaining}}</p>
-		<p>Number discarded: {{cardsDiscarded}}</p>
-	</div>
-	<div id="players">
-	<player 
-		v-for="player in players"
-		v-on:end-turn="nextPlayer"
-		v-on:travel="function(s) { players[currentPlayer].location = s }"
-		:key="player.id"
-		:class="{ active: currentPlayer == player.id }"
-		:active="currentPlayer == player.id"
-		:location="player.location"
-		:name="player.name"
-		:objective="player.objective"
-	></player>
-	</div>
-	<pawn v-for="player in players"
-		  :key="player.id"
-		  :name="player.name"
-		  :location="player.location"
-		  :color="player.color"
-		  :class="{ active: currentPlayer == player.id }"
-	></pawn>
 </div>
 
 <h2 class="newsection">Game Board</h2>
