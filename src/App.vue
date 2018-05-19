@@ -1,5 +1,4 @@
 <script>
-import Snippet from './components/Snippet.vue'
 import Pawn from './components/Pawn.vue'
 import Player from './components/Player.vue'
 
@@ -10,7 +9,6 @@ export default {
   components: {
     Pawn,
     Player,
-    Snippet,
   },
 	data: function() {
     return {
