@@ -5,14 +5,13 @@ Progress:
 	implement basic game rules
 	object-orient players and cards
 	use Vue for display of players and cards
-To-do:
 	vue-cli and building + transpiling
-	vue-draggable for interacting with cards
 	single file components
+To-do:
+	vue-draggable for interacting with cards
 	unit tests
 Questions:
 	svg display
-	jquery linking
 	indexOf breaks on IE < 9
 ********/
 

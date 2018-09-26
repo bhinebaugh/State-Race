@@ -42,7 +42,7 @@ export default {
 		}
 	},
 	mounted: function() {
-		// this.startTurn()
+		this.startTurn()
 	},
 	methods: {
 		removeCard: function(cardName) {
@@ -64,6 +64,14 @@ export default {
 		},
 		setMission: function() {
 			return 'MO'
+		},
+		movePlayer: function(destination) {
+			this.cplayer.location = destination
+			if (destination == this.cplayer.objective) {
+				alert("victory for", this.cplayer.name)
+			} else {
+				this.nextPlayer()
+			}
 		},
 		nextPlayer: function() {
 			this.currentPlayer += 1;
@@ -186,6 +194,8 @@ p {
 
 		<Player 
 			v-for="player in players"
+			v-on:travel="movePlayer"
+			v-on:end-turn="nextPlayer"
 			:key="'p' + player.id"
 			:player="player"
 			:active="player.id == currentPlayer"
@@ -195,6 +205,7 @@ p {
 			v-for="player in players"
 			:key="player.id"
 			:player="player"
+			:class="{ active: currentPlayer == player.id }"
 		/>
 
     <div id="gameboard">
