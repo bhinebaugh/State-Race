@@ -1,4 +1,5 @@
 <script>
+import GameLog from './components/GameLog.vue'
 import Pawn from './components/Pawn.vue'
 import Player from './components/Player.vue'
 
@@ -11,20 +12,21 @@ export default {
     Player,
   },
 	data: function() {
-    return {
-      showInstructions: false,
-      turnNumber: 0,
-      gameRound: 0, // game hasn't begun
-      currentPlayer: 0,
-      cardsDiscarded: 0,
-      cardsRemaining: 0,
-      distance: 300, // rename this, give more meaningful value
-      players: [
-        { id: 0, name: "Melvin", automated: true, token: "#token1", color: '#f88', location: "OH", objective: "AL" },
-        { id: 1, name: "You", automated: false, token: "#token2", color: '#8f8', location: "OH" },
-        { id: 2, name: "Priscilla", automated: true, token: "#token3", color: '#88f', location: "OH" }
-      ],
-    }
+		return {
+		showInstructions: false,
+		turnNumber: 0,
+		gameRound: 0, // game hasn't begun
+		currentPlayer: 0,
+		cardsDiscarded: 0,
+		cardsRemaining: 0,
+		distance: 300, // rename this, give more meaningful value
+		players: [
+			{ id: 0, name: "Melvin", automated: true, token: "#token1", color: '#f88', location: "OH", objective: "AL" },
+			{ id: 1, name: "You", automated: false, token: "#token2", color: '#8f8', location: "OH" },
+			{ id: 2, name: "Priscilla", automated: true, token: "#token3", color: '#88f', location: "OH" }
+		],
+		log: ['initial message']
+		}
 	},
 	computed: {
 		cplayer: function() {
@@ -36,6 +38,7 @@ export default {
 			player.location = randomState();
 			// player.objective = this.setMission( this.distance );
 			player.objective = randomState();
+			this.log.push(`${player.name} starts in ${player.location}, heading to ${player.objective}`)
 			// if(!players[p].automated) {
 			// 	players[p].setDroppables();
 			// }
@@ -46,18 +49,22 @@ export default {
 	},
 	methods: {
 		removeCard: function(cardName) {
-			console.log('removing card',cardName)
-			console.log(this.player.cards)
+			this.log.push('removing card: '+cardName)
+			this.log.push('remaining cards: '+this.player.cards)
 			let cardIndex = this.player.cards.indexOf(cardName)
 			if( cardIndex >= 0 ) {
 				this.player.cards.splice(cardIndex,1)
 				this.nextPlayer()
 			} else {
-				console.log('card not found in hand')
+				this.log.push('card not found in hand')
 			}
 		},
 		startTurn: function() {
-			console.log('turn for', this.currentPlayer)
+			var cp = this.currentPlayer;
+			// var msg = 'turn for Player ' + cp + this.players[cp].name;
+			var msg = `turn for Player ${cp} (${this.players[cp].name})`;
+			this.log.push(msg);
+			this.log.push(msg)
 		},
 		setLocation: function() {
 			return 'AK'
@@ -87,22 +94,41 @@ export default {
 </script>
 
 <style>
+body {margin: 0;}
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+	background: #eeecc7;
+	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	color: #2c3e50;
+	margin-top: 60px;
 }
 h1 {
 	background: #8888aa;
+	background: linear-gradient(#88a,#8585a6);
 	color: #ffffff;
 	margin: 0;
 	padding: 10px;
 }
+h2 {
+	background: #d5d5d9;
+	margin: 0;
+	padding: 10px;
+	color: #88a;
+}
 p {
 	font-family: 'Helvetica', sans-serif;
+}
+.game-log {
+	height: 5rem;
+	overflow-y: scroll;
+	border: dashed 1px #bbb;
+	background: #eff2f7;
+	color: #556;
+	font-family: sans;
+	font-size: smaller;
+	margin: 20px;
 }
 .newsection {
 	clear: both;
@@ -173,7 +199,11 @@ p {
 
 <template>
   <div>
-    <h1>State Race, a game of U.S. geography</h1>
+    <h1>State Race</h1>
+	<h2>a game of U.S. geography</h2>
+	<ol class="game-log">
+		<li v-for="message in log">{{message}}</li>
+	</ol>
 
 		<button id="help" @click="showInstructions = true">
 			Instructions for Gameplay!

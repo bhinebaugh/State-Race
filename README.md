@@ -1,4 +1,11 @@
-An adaptation of a custom board game
+An adaptation of a board game originally developed for the kindergarten classroom with an aim of educating about US geography
+
+# Implementation in Vue.js
+
+uses Vue, VueX for state management, Vue templates
+
+## Installation
+Use npm or yarn to install Vue's dependencies: `npm install`
 
 # Equipment:
 Deck. One card for each state? Two cards for each state? Wildcards?
