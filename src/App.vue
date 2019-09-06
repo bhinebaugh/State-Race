@@ -94,7 +94,10 @@ export default {
 </script>
 
 <style>
-body {margin: 0;}
+body {
+	background: beige;
+	margin: 0;
+}
 #app {
 	background: #eeecc7;
 	font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -105,41 +108,28 @@ body {margin: 0;}
 	margin-top: 60px;
 }
 h1 {
-	background: #8888aa;
-	background: linear-gradient(#88a,#8585a6);
-	color: #ffffff;
+	background: #ddd5b1;
+	background: linear-gradient(#ddd5b1,#d9b99b);
+	color: #a47777;
 	margin: 0;
 	padding: 10px;
 }
 h2 {
-	background: #d5d5d9;
+	background: #88766a;
 	margin: 0;
 	padding: 10px;
-	color: #88a;
+	color: #eee3ba;
+}
+section h3 {
+	background: #88766a;
+	color: #eee3ba;
+	padding: 0.5em;
 }
 p {
 	font-family: 'Helvetica', sans-serif;
 }
-.game-log {
-	height: 5rem;
-	overflow-y: scroll;
-	border: dashed 1px #bbb;
-	background: #eff2f7;
-	color: #556;
-	font-family: sans;
-	font-size: smaller;
-	margin: 20px;
-}
-.newsection {
-	clear: both;
-}
-#status {
-	font-size: 80%;
-}
-#status p {
-	display: inline;
-	padding: 20px;
-}
+dt, dd { display: inline; }
+
 .location {
 	background: #ddeeff;
 	border: 1px solid #9999bb;
@@ -160,14 +150,38 @@ p {
 }
 
 #help {
-	height:4em;
-	width: 12em;
+	height:2.5em;
 	position: absolute;
 	right: 20px;
 	top: 10px;
 }
 
+#status {
+	display: flex;
+}
+#game-log {
+	flex: 1 1 50%;
+	height: 5rem;
+	overflow-y: scroll;
+	border: dashed 1px #bbb;
+	background: #eff2f7;
+	color: #556;
+	font-family: sans;
+	font-size: smaller;
+	margin: 20px;
+}
+#game-state {
+	font-size: 80%;
+	flex: 1 1 50%;
+}
 
+main {
+	display: flex;
+}
+#players {
+	display: flex;
+	flex-direction: column;
+}
 #gameboard {
 	border: 2px solid #aaaaaa;
 	height: 612px;
@@ -201,9 +215,6 @@ p {
   <div>
     <h1>State Race</h1>
 	<h2>a game of U.S. geography</h2>
-	<ol class="game-log">
-		<li v-for="message in log">{{message}}</li>
-	</ol>
 
 		<button id="help" @click="showInstructions = true">
 			Instructions for Gameplay!
@@ -214,31 +225,40 @@ p {
 			</p>
 			<button id="done" @click="showInstructions = false">OK!</button>	
 		</div>
-		
-		<div id="status">
-			<p>Turn: {{turnNumber}} Round: {{gameRound}}</p>
-			<p>Ranking: <span id='ranking'>rank</span></p>
-			<p>Cards left in deck: {{cardsRemaining}}</p>
-			<p>Number discarded: {{cardsDiscarded}}</p>
-		</div>
 
-		<Player 
-			v-for="player in players"
-			v-on:travel="movePlayer"
-			v-on:end-turn="nextPlayer"
-			:key="'p' + player.id"
-			:player="player"
-			:active="player.id == currentPlayer"
-		/>
+	<section id="status">
+		<dl id="game-state">
+			<dt>Turn:</dt> <dd>{{turnNumber}}</dd><br/>
+			<dt>Round:</dt> <dd>{{gameRound}}</dd><br/>
+			<dt>Ranking:</dt> <dd><span id='ranking'>rank</span></dd><br/>
+			<dt>Cards left in deck:</dt> <dd>{{cardsRemaining}}</dd><br/>
+			<dt>Number discarded:</dt> <dd>{{cardsDiscarded}}</dd><br/>
+		</dl>
+		<ol id="game-log">
+			<li v-for="message in log">{{message}}</li>
+		</ol>
+	</section>
 
-		<Pawn
-			v-for="player in players"
-			:key="player.id"
-			:player="player"
-			:class="{ active: currentPlayer == player.id }"
-		/>
+	<main>
+		<section id="players">
+			<h3>Players</h3>
+			<Player 
+				v-for="player in players"
+				v-on:travel="movePlayer"
+				v-on:end-turn="nextPlayer"
+				:key="'p' + player.id"
+				:player="player"
+				:active="player.id == currentPlayer"
+			/>
+		</section>
 
-    <div id="gameboard">
+    	<section id="gameboard">
+			<Pawn
+				v-for="player in players"
+				:key="player.id"
+				:player="player"
+				:class="{ active: currentPlayer == player.id }"
+			/>
 
 			<svg
 				xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -1168,7 +1188,8 @@ p {
 				</g>
 			</svg>
 
-    </div>
+    	</section>
+	</main>
 		
   </div>
 </template>

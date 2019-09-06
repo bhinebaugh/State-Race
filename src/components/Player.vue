@@ -142,8 +142,8 @@ div.discards p {
 }
 
 .player-info {
+	background: #fdfaec;
 	border: solid 1px #888888;
-	float: left;
 	margin: 20px;
 	padding: 5px;
 	width: 250px;
