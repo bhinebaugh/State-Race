@@ -1,5 +1,5 @@
 <script>
-import GameLog from './components/GameLog.vue'
+// import GameLog from './components/GameLog.vue'
 import Pawn from './components/Pawn.vue'
 import Player from './components/Player.vue'
 
@@ -95,7 +95,7 @@ export default {
 
 <style>
 body {
-	background: beige;
+	background: beige url('../public/boardbg.png');
 	margin: 0;
 }
 #app {
@@ -107,15 +107,24 @@ body {
 	color: #2c3e50;
 	margin-top: 60px;
 }
+header.roadmap {
+	background: url('../public/roadmap.jpg');
+	background-size: cover;
+}
+footer#primary {
+	background: #88766a;
+	color: #eee3ba;
+	padding: 1rem 2rem;
+}
 h1 {
-	background: #ddd5b1;
-	background: linear-gradient(#ddd5b1,#d9b99b);
-	color: #a47777;
+	background: #ddd5b1b0;
+	/* background: linear-gradient(#ddd5b1,#d9b99b); */
+	color: #a47799;
 	margin: 0;
-	padding: 10px;
+	padding: 32px 10px 10px;
 }
 h2 {
-	background: #88766a;
+	background: #88766ae8;
 	margin: 0;
 	padding: 10px;
 	color: #eee3ba;
@@ -123,6 +132,7 @@ h2 {
 section h3 {
 	background: #88766a;
 	color: #eee3ba;
+	margin: 0;
 	padding: 0.5em;
 }
 p {
@@ -157,22 +167,27 @@ dt, dd { display: inline; }
 }
 
 #status {
+	border: solid 3px #bbb;
+	background: #c5bbfb8c;
+	color: #556;
 	display: flex;
+	font-family: sans;
+	font-size: smaller;
+	padding: 1rem;
 }
 #game-log {
 	flex: 1 1 50%;
 	height: 5rem;
 	overflow-y: scroll;
-	border: dashed 1px #bbb;
-	background: #eff2f7;
-	color: #556;
-	font-family: sans;
-	font-size: smaller;
-	margin: 20px;
+	margin: 0;
 }
 #game-state {
+	background: #9e8abb40;
+	border: dotted 1px #948f9f;
 	font-size: 80%;
 	flex: 1 1 50%;
+	margin: 0;
+	padding: 1em;
 }
 
 main {
@@ -181,10 +196,12 @@ main {
 #players {
 	display: flex;
 	flex-direction: column;
+	margin: 1rem;
 }
 #gameboard {
 	border: 2px solid #aaaaaa;
 	height: 612px;
+	margin: 1rem;
 	overflow: hidden;
 	position: relative;
 	top: 0;
@@ -213,18 +230,20 @@ main {
 
 <template>
   <div>
-    <h1>State Race</h1>
-	<h2>a game of U.S. geography</h2>
+		<header class="roadmap">
+			<h1>State Race</h1>
+			<h2>a game of U.S. geography</h2>
 
-		<button id="help" @click="showInstructions = true">
-			Instructions for Gameplay!
-		</button>
-		<div id="instructions" v-show="showInstructions">
-			<p>
-			Lorem Ipsum this is how to play.
-			</p>
-			<button id="done" @click="showInstructions = false">OK!</button>	
-		</div>
+			<button id="help" @click="showInstructions = true">
+				Instructions for Gameplay!
+			</button>
+			<div id="instructions" v-show="showInstructions">
+				<p>
+				Unfortunately the game is a bit broken at the moment. Playing it is not advised until this is remedied.
+				</p>
+				<button id="done" @click="showInstructions = false">OK!</button>	
+			</div>
+		</header>
 
 	<section id="status">
 		<dl id="game-state">
@@ -1190,6 +1209,10 @@ main {
 
     	</section>
 	</main>
+	<footer id="primary">
+		<p>License?</p>
+		<p>Header image adapted from photo by <a href="https://unsplash.com/@stevep4?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Stephen Monroe"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Stephen Monroe</span></a></p>
+	</footer>
 		
   </div>
 </template>

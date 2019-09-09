@@ -115,15 +115,13 @@ export default {
 	border: 2px solid #8d5;
 }
 div.discards {
-	background: #ffdddd;
-	border: 1px solid #ccaaaa;
+	background: #d3cbdf;
 	margin: auto;
 	padding: 10px;
 	text-align: center;
 }
 div.discards p {
-	color: #ddaaaa;
-	font: 0.8em 'Arial', sans-serif;
+	font-size: 0.8em;
 }
 .discards .control {
 	border-top: 1px solid #ffaa66;
@@ -142,9 +140,10 @@ div.discards p {
 }
 
 .player-info {
-	background: #fdfaec;
-	border: solid 1px #888888;
-	margin: 20px;
+	background: #ede8ffcc;
+	border: solid 1px #b3ada6;
+	box-shadow: 0px 1px 1px #817ab3;
+	margin: 8px 0;
 	padding: 5px;
 	width: 250px;
 }
@@ -152,8 +151,8 @@ div.discards p {
 	animation: pulse 1.2s linear infinite alternate;
 }
 @keyframes pulse {
-	from { box-shadow: 0 0 12px rgb(255, 127, 20); }
-	to { box-shadow: 0 0 2px rgb(255, 127, 20); }
+	from { box-shadow: 0 0 12px rgb(148, 115, 163); }
+	to { box-shadow: 0 0 2px rgb(194, 131, 223); }
 }
 .player-info.current.start {
 	box-shadow: 0 0 12px rgb(255, 127, 20);
