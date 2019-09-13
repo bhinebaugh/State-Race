@@ -31,7 +31,7 @@ export default {
 		},
 		styleObject: function() {
 			return {
-				top: (this.coordinates[1] + 305) + 'px',
+				top: (this.coordinates[1] + 20) + 'px',
 				left: this.coordinates[0] + 'px',
 				backgroundColor: this.player.color
 			}
