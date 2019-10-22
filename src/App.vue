@@ -93,7 +93,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 body {
 	background: beige url('../public/boardbg.png');
 	margin: 0;
@@ -254,7 +254,7 @@ main {
 			<dt>Number discarded:</dt> <dd>{{cardsDiscarded}}</dd><br/>
 		</dl>
 		<ol id="game-log">
-			<li v-for="message in log">{{message}}</li>
+			<li>will show: v-for="message in log" {{message}}</li>
 		</ol>
 	</section>
 

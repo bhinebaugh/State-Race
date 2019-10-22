@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .cardbtn { 
 	background: #efeff8;
 	color: #773300; 
@@ -149,6 +149,10 @@ div.discards p {
 }
 .active {  /*used with .player-info and .pawn*/
 	animation: pulse 1.2s linear infinite alternate;
+	&:before {
+		content: 'hello before';
+		border: solid 4px blue;
+	}
 }
 @keyframes pulse {
 	from { box-shadow: 0 0 12px rgb(148, 115, 163); }

@@ -1,8 +1,0 @@
-player
-
-
-objective should never be starting location
-cards in hand should stay the same
-
-round should increment after last player finishes turn
-
